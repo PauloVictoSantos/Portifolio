@@ -1,80 +1,55 @@
-import { Code } from "lucide-react"
 import PhoneMockup from './PhoneMockup'
 import PhoneContent from './Phone'
 import { FlipWords } from '../ui/flip-words'
 import { LinkPreview } from "../ui/link-preview"
 import { Button } from "../ui/button"
+import { Spotlight } from "../ui/spotlight"
+import { Highlight } from "../ui/hero-highlight"
+import { CheckCircle2 } from "lucide-react"
 
 export default function SkillsSection() {
-  const words = ["interfaces", "projetos", "sistemas", "aplicações"]
+  const words = ["interfaces", "projetos", "sistemas", "aplicações", "produtos"]
 
   return (
-    <section id='skills' className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <section
+      id='skills'
+      className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden bg-background"
+    >
+      <Spotlight
+        className="-top-40 left-0 md:-top-20 md:left-60"
+        fill="white"
+      />
 
-        {/* Texto */}
-        <div className="space-y-6 z-10">
-
-          {/* Badge minimalista */}
-          <div className="flex items-center gap-3">
-            <span className="w-5 h-px bg-neutral-300 dark:bg-neutral-700" />
-            <span className="text-[11px] font-medium tracking-widest uppercase text-neutral-400">
-              habilidades
-            </span>
-          </div>
-
-          {/* Título */}
-          <div>
-            <h1 className="text-5xl lg:text-6xl font-serif font-normal leading-[1.1] tracking-tight">
-              Eu desenvolvo
+      <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="flex flex-col" style={{ gap: 0 }}>
+          <div className="mb-5">
+            <h1
+              className="text-7xl font-black leading-[1.05] tracking-tight"
+            >
+              Skills
             </h1>
-            <h1 className="text-5xl lg:text-6xl font-serif font-normal leading-[1.1] tracking-tight text-neutral-500 dark:text-neutral-400">
+            <h1 className="text-7xl font-black leading-[1.05] tracking-tight">
               <FlipWords words={words} />
             </h1>
-          </div>
-
-          {/* Divisor */}
-          <div className="w-8 h-px bg-neutral-200 dark:bg-neutral-800" />
-
-          {/* Parágrafos */}
-          <div className="space-y-4 max-w-md">
-            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
-              Crio interfaces com{" "}
-              <LinkPreview url="https://react.dev" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
-                React
-              </LinkPreview>{" "}
-              e{" "}
-              <LinkPreview url="https://nextjs.org" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
-                Next.js
-              </LinkPreview>,{" "}
-              focando em organização de código e boa experiência visual.
-            </p>
-
-            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
-              Desenvolvo lógica em{" "}
-              <LinkPreview url="https://en.wikipedia.org/wiki/C_(programming_language)" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
-                C
-              </LinkPreview>{" "}
-              — estruturas de dados, memória, funcionamento interno dos programas.
-            </p>
-
-            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
-              Construo projetos continuamente para aplicar o que aprendo e evoluir como desenvolvedor.
+            <p className='mt-10'>
+              Estudante de desenvolvimento focado em frontend. Trabalho com React, Next.js e TypeScript para construir interfaces que fazem sentido — visuais, acessíveis e bem estruturadas.
             </p>
           </div>
 
-          {/* Botões */}
-          <div className="flex gap-3 pt-2">
-            <Button className="rounded-full px-6 text-[13px]">
+          <div className="flex items-center gap-4 mb-6">
+            <Button className="rounded-full px-7 font-bold text-[14px] shadow-md">
               Ver Projetos
             </Button>
-            <Button variant="outline" className="rounded-full px-6 text-[13px] text-neutral-500">
+            <a
+              href="#contact"
+              className="font-semibold text-[14px] underline underline-offset-4"
+            >
               Fale Comigo
-            </Button>
+            </a>
           </div>
         </div>
 
-        <div className="flex  justify-center lg:justify-end">
+        <div className="flex justify-center lg:justify-end">
           <PhoneMockup>
             <PhoneContent />
           </PhoneMockup>

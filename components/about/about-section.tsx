@@ -5,6 +5,13 @@ import { TooltipCard } from "../ui/tooltip-card";
 import { LinkPreview } from "../ui/link-preview";
 import { motion, useInView } from "motion/react";
 import { useRef, useState, useEffect } from "react";
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+import { HeroHighlight, Highlight } from "../ui/hero-highlight";
 
 function FloatingCard({
   children,
@@ -91,11 +98,11 @@ function StackCard({ delay }: { delay: number }) {
         transition={{ type: "spring", stiffness: 320, damping: 20 }}
         className="backdrop-blur-md rounded-2xl shadow-xl px-3.5 py-3 border w-37 space-y-2"
       >
-        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Tech Stack</p>
+        <p className="text-[9px] font-semibold text-foreground uppercase tracking-widest">Tech Stack</p>
         {stack.map((s) => (
           <div key={s.label} className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
-            <span className="text-[10px] text-gray-700 font-medium">{s.label}</span>
+            <span className="text-[10px] text-foreground font-medium">{s.label}</span>
           </div>
         ))}
       </motion.div>
@@ -103,104 +110,136 @@ function StackCard({ delay }: { delay: number }) {
   );
 }
 
-const DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
- 
+
 function CommitCard({ delay }: { delay: number }) {
-  // bars[0..6] = Dom..Sáb, valor = nº de push events
-  const [bars, setBars] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
+  const [data, setData] = useState<
+    { date: string; commits: number }[]
+  >([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
- 
+
   useEffect(() => {
     async function fetchCommits() {
       try {
-        // Pega até 100 eventos públicos (cobertura ~30 dias)
         const res = await fetch(
           "https://api.github.com/users/PauloVictoSantos/events/public?per_page=100"
         );
+
         if (!res.ok) throw new Error("fetch failed");
-        const events: any[] = await res.json();
- 
-        // Conta PushEvents agrupados por dia da semana
-        const counts = [0, 0, 0, 0, 0, 0, 0];
-        let pushTotal = 0;
- 
-        events.forEach((ev) => {
+
+        const events = await res.json();
+
+        const commitsPerDay: Record<string, number> = {};
+
+        let totalCommits = 0;
+
+        events.forEach((ev: any) => {
           if (ev.type === "PushEvent") {
-            const dow = new Date(ev.created_at).getDay(); // 0=Dom … 6=Sáb
             const commits = ev.payload?.commits?.length ?? 1;
-            counts[dow] += commits;
-            pushTotal += commits;
+
+            const date = new Date(ev.created_at)
+              .toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+              });
+
+            commitsPerDay[date] =
+              (commitsPerDay[date] || 0) + commits;
+
+            totalCommits += commits;
           }
         });
- 
-        setBars(counts);
-        setTotal(pushTotal);
-      } catch {
-        // fallback silencioso — bars ficam zerados
+
+        const formattedData = Object.entries(commitsPerDay)
+          .map(([date, commits]) => ({
+            date,
+            commits,
+          }))
+          .reverse();
+
+        setData(formattedData);
+        setTotal(totalCommits);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
+
     fetchCommits();
   }, []);
- 
-  const max = Math.max(...bars, 1); // evita divisão por zero
- 
-  // Dia da semana hoje
-  const today = new Date().getDay();
- 
+
   return (
     <FloatingCard delay={delay}>
       <motion.div
         whileHover={{ scale: 1.05, y: -3 }}
         transition={{ type: "spring", stiffness: 320, damping: 20 }}
-        className="backdrop-blur-md bg-white/80 rounded-2xl shadow-xl px-3.5 py-3 border border-white/60 w-44"
+        className="backdrop-blur-md rounded-2xl shadow-xl px-3.5 py-3 border w-40"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-2.5">
-          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[9px] font-semibold uppercase tracking-widest">
             Commits
           </p>
+
           {loading ? (
-            <span className="text-[8px] text-gray-300 animate-pulse">carregando…</span>
+            <span className="text-[8px] animate-pulse">
+              carregando…
+            </span>
           ) : (
-            <span className="text-[8px] font-bold text-[#60519b]">
-              {total} recentes
+            <span className="text-[8px] font-bold text-accent">
+              {total} commits
             </span>
           )}
         </div>
- 
-        {/* Barras */}
-        <div className="flex items-end gap-0.75 h-10">
-          {bars.map((val, i) => {
-            const heightPct = loading ? 0 : Math.max((val / max) * 100, val > 0 ? 8 : 0);
-            const isToday = i === today;
-            return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                <motion.div
-                  className="w-full rounded-t-[3px]"
-                  style={{
-                    background: isToday ? "#60519b" : "#ede9fe",
-                  }}
-                  initial={{ height: 0 }}
-                  animate={{ height: loading ? 0 : `${heightPct}%` }}
-                  transition={{ duration: 0.55, delay: delay + i * 0.06, ease: "easeOut" }}
-                />
-                <span
-                  className={`text-[6px] ${isToday ? "text-[#60519b] font-bold" : "text-gray-300"}`}
+
+        <div className="h-16 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient
+                  id="colorCommits"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
                 >
-                  {DAYS[i].charAt(0)}
-                </span>
-              </div>
-            );
-          })}
+                  <stop
+                    offset="5%"
+                    stopColor="#7c3aed"
+                    stopOpacity={0.4}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="#7c3aed"
+                    stopOpacity={0}
+                  />
+                </linearGradient>
+              </defs>
+
+              <Tooltip
+                cursor={false}
+                contentStyle={{
+                  background: "#111",
+                  border: "1px solid #222",
+                  borderRadius: "10px",
+                  fontSize: "10px",
+                }}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="commits"
+                stroke="#7c3aed"
+                strokeWidth={2}
+                fill="url(#colorCommits)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </motion.div>
     </FloatingCard>
   );
 }
- 
 
 const skills = [
   { label: "React", icon: "⚛️" },
@@ -214,7 +253,7 @@ function CTAButtons() {
   const buttons = [
     {
       label: "LinkedIn",
-      icon: <Linkedin className="w-4 h-4" />,
+      icon: <Linkedin className="w-4 h-4 text-blue-500" />,
       href: "https://www.linkedin.com/in/paulo-victor-8b05133a0",
       primary: true,
     },
@@ -226,7 +265,7 @@ function CTAButtons() {
     },
     {
       label: "Currículo",
-      icon: <FileText className="w-4 h-4" />,
+      icon: <FileText className="w-4 h-4 text-amber-500" />,
       href: "/curriculo.pdf",
       primary: false,
     },
@@ -245,10 +284,10 @@ function CTAButtons() {
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={`
             inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold
-            transition-colors duration-200 border
+            transition-colors duration-200 border border-card 
             ${btn.primary
-              ? "bg-[#60519b] text-white border-[#60519b] hover:bg-[#4f4284] shadow-lg shadow-[#60519b]/25"
-              : "bg-white text-gray-700 border-gray-200 hover:border-[#60519b] hover:text-[#60519b] shadow-sm"
+              ? "bg-text-accent text-foreground border-card shadow-lg shadow-text-accent/25"
+              : "text-foreground shadow-sm"
             }
           `}
         >
@@ -284,12 +323,27 @@ export default function AboutSection() {
           animate={inView ? "visible" : "hidden"}
         >
 
-          {/* Heading principal */}
           <motion.div variants={item} className="relative inline-block">
-            <h1 className="text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-gray-900">
-              Olá, eu sou<br />
-              <span className="text-[#60519b]">Paulo</span>
-            </h1>
+            <motion.h1
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: [20, -5, 0],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: [0.4, 0.0, 0.2, 1],
+              }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground leading-relaxed lg:leading-snug text-center mx-auto "
+            >
+              Olá, eu sou
+              <Highlight className="text-accent">
+                Paulo Victor
+              </Highlight>
+            </motion.h1>
             <TooltipCard
               containerClassName="absolute top-3 -right-7 cursor-pointer"
               content={
@@ -299,48 +353,48 @@ export default function AboutSection() {
                 </div>
               }
             >
-              <Info className="w-4 h-4 text-gray-300 hover:text-[#60519b] transition" />
+              <Info className="w-4 h-4 text-accent hover:text-accent/50 transition" />
             </TooltipCard>
           </motion.div>
 
           {/* Subtítulo / role */}
-          <motion.h2 variants={item} className="text-xl lg:text-2xl font-semibold text-gray-700 leading-snug">
-            Desenvolvedor{" "}
+          <motion.h2 variants={item} className="text-xl lg:text-2xl font-semibold text-foreground leading-snug">
+            Desenvolvedor 
             <LinkPreview
               url="https://react.dev"
-              className="text-[#60519b]"
+              className="text-accent"
             >
-              Front-end
+             Front-end
             </LinkPreview>
           </motion.h2>
 
           {/* Metadados: formação e localização */}
           <motion.div variants={item} className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <GraduationCap className="w-4 h-4 text-[#60519b] shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-foreground">
+              <GraduationCap className="w-4 h-4 text-gray-700 shrink-0" />
               <span>
                 Engenharia da Computação · Técnico em{" "}
                 <LinkPreview
                   url="https://www2.ifam.edu.br/campus/cprf"
-                  className="font-medium text-gray-700 hover:text-[#60519b] transition"
+                  className="font-medium text-foreground hover:text-accent transition"
                 >
                   IFAM
                 </LinkPreview>
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <MapPin className="w-4 h-4 text-[#60519b] shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-foreground">
+              <MapPin className="w-4 h-4 text-red-500 shrink-0" />
               <span>Manaus, AM · 21 anos</span>
             </div>
           </motion.div>
 
           {/* Parágrafos */}
-          <motion.div variants={item} className="space-y-4 text-[1rem] leading-relaxed text-gray-500">
+          <motion.div variants={item} className="space-y-4 text-[1rem] leading-relaxed text-foreground">
             <p>
               Minha trajetória começou no{" "}
               <LinkPreview
                 url="https://www.ifam.edu.br"
-                className="font-medium text-gray-800"
+                className="font-medium text-foreground"
               >
                 IFAM
               </LinkPreview>
@@ -351,14 +405,14 @@ export default function AboutSection() {
               Hoje curso{" "}
               <LinkPreview
                 url="https://pt.wikipedia.org/wiki/Engenharia_da_Computa%C3%A7%C3%A3o"
-                className="font-medium text-gray-800"
+                className="font-medium text-foreground"
               >
                 Engenharia da Computação
               </LinkPreview>{" "}
               e já coloquei a mão em produção: estagiei na{" "}
               <LinkPreview
                 url="https://www.embrapa.br"
-                className="font-medium text-gray-800"
+                className="font-medium text-foreground"
               >
                 Embrapa
               </LinkPreview>
@@ -367,7 +421,6 @@ export default function AboutSection() {
 
           </motion.div>
 
-          {/* CTA buttons */}
           <motion.div variants={item}>
             <CTAButtons />
           </motion.div>
@@ -394,11 +447,11 @@ export default function AboutSection() {
             <StackCard delay={0.7} />
           </div>
 
-          <div className="absolute right-0 top-[38%] -translate-y-1/2 z-30">
+          <div className="absolute right-0 top-[25%] -translate-y-1/2 z-30">
             <CommitCard delay={1.0} />
           </div>
 
-          <div className="absolute bottom-14 right-2 z-30">
+          <div className="absolute bottom-72 right-2 z-30">
             <ProfileCard
               name="Paulo Victor"
               role="Full-Stack Developer"
@@ -409,7 +462,7 @@ export default function AboutSection() {
             />
           </div>
 
-          <div className="absolute bottom-4 left-2 z-30">
+          <div className="absolute bottom-48 left-2 z-30">
             <ProfileCard
               name="Open to Work"
               role="Software Engineer"
