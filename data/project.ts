@@ -115,7 +115,24 @@ export const projects: Project[] = [
     title: "GameGift - Sistema de Ranking",
     description:
       "GameGift é um sistema completo de ranking desenvolvido com Next.js no frontend e Node.js no backend, utilizando PostgreSQL para persistência de dados. A aplicação permite gerenciamento de usuários, atualização dinâmica de pontuações e organização de classificações em tempo real. O foco principal foi consolidar conhecimentos em integração entre frontend e backend, modelagem de banco de dados e estruturação de APIs.",
-    site: "https://game-gift-4t85.vercel.app/",
+    site: "https://ecoroots-ai.vercel.app/",
+    code: "#",
+    tech: [
+      "next",
+      "react",
+      "typescript",
+      "tailwind",
+      "framer",
+      "postgres",
+      "supabase",
+    ],
+    createdAt: "2026-01-20",
+  },
+  {
+    title: "eco - Sistema de Ranking",
+    description:
+      "eco é um sistema completo de ranking desenvolvido com Next.js no frontend e Node.js no backend, utilizando PostgreSQL para persistência de dados. A aplicação permite gerenciamento de usuários, atualização dinâmica de pontuações e organização de classificações em tempo real. O foco principal foi consolidar conhecimentos em integração entre frontend e backend, modelagem de banco de dados e estruturação de APIs.",
+    site: "https://eco-roots-dashboard.vercel.app/",
     code: "#",
     tech: [
       "next",

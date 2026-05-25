@@ -1,10 +1,8 @@
-import { Info, Code } from "lucide-react"
+import { Code } from "lucide-react"
 import PhoneMockup from './PhoneMockup'
 import PhoneContent from './Phone'
 import { FlipWords } from '../ui/flip-words'
-import { TooltipCard } from "../ui/tooltip-card"
 import { LinkPreview } from "../ui/link-preview"
-import SectionBadge from "../ui/SectionBadge"
 import { Button } from "../ui/button"
 
 export default function SkillsSection() {
@@ -12,76 +10,71 @@ export default function SkillsSection() {
 
   return (
     <section id='skills' className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-        <div className="space-y-8 z-10">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-          <SectionBadge
-            icon={<Code className="h-10 w-10 text-[#60519b]" />}
-            text="O que eu sei"
-          />
+        {/* Texto */}
+        <div className="space-y-6 z-10">
 
-          <div className="relative inline-block">
-            <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight">
-              Eu desenvolvo <br />
-              <span className="bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                <FlipWords words={words} />
-              </span>
-            </h1>
-
-            <TooltipCard
-              containerClassName="absolute top-4 -right-8 cursor-pointer"
-              content={
-                <div className="max-w-xs text-sm">
-                  <p className="font-semibold mb-1">Como funciona:</p>
-                  <p>
-                    O componente <strong>FlipWords</strong> alterna
-                    automaticamente as palavras do array
-                    <code> words </code> criando o efeito animado.
-                  </p>
-                </div>
-              }
-            >
-              <Info className="w-4 h-4 text-neutral-500 hover:text-[#60519b] transition" />
-            </TooltipCard>
+          {/* Badge minimalista */}
+          <div className="flex items-center gap-3">
+            <span className="w-5 h-px bg-neutral-300 dark:bg-neutral-700" />
+            <span className="text-[11px] font-medium tracking-widest uppercase text-neutral-400">
+              habilidades
+            </span>
           </div>
 
-          <p className="text-lg lg:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
-            Crio interfaces utilizando{" "}
-            <LinkPreview url="https://react.dev" className="font-bold text-[#60519b]">
-              React
-            </LinkPreview>{" "}
-            e{" "}
-            <LinkPreview url="https://nextjs.org" className="font-bold text-[#60519b]">
-              Next.js
-            </LinkPreview>,
-            focando em organização de código e boa experiência visual.
-          </p>
+          {/* Título */}
+          <div>
+            <h1 className="text-5xl lg:text-6xl font-serif font-normal leading-[1.1] tracking-tight">
+              Eu desenvolvo
+            </h1>
+            <h1 className="text-5xl lg:text-6xl font-serif font-normal leading-[1.1] tracking-tight text-neutral-500 dark:text-neutral-400">
+              <FlipWords words={words} />
+            </h1>
+          </div>
 
-          <p className="text-lg lg:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
-            Desenvolvo lógica de programação em{" "}
-            <LinkPreview url="https://en.wikipedia.org/wiki/C_(programming_language)" className="font-bold text-[#60519b]">
-              C
-            </LinkPreview>,
-            entendendo estruturas de dados, memória e funcionamento interno dos programas.
-          </p>
+          {/* Divisor */}
+          <div className="w-8 h-px bg-neutral-200 dark:bg-neutral-800" />
 
-          <p className="text-lg lg:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
-            Estou constantemente construindo projetos para aplicar
-            o que aprendo na faculdade e evoluir como desenvolvedor.
-          </p>
+          {/* Parágrafos */}
+          <div className="space-y-4 max-w-md">
+            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
+              Crio interfaces com{" "}
+              <LinkPreview url="https://react.dev" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
+                React
+              </LinkPreview>{" "}
+              e{" "}
+              <LinkPreview url="https://nextjs.org" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
+                Next.js
+              </LinkPreview>,{" "}
+              focando em organização de código e boa experiência visual.
+            </p>
 
-          <div className="flex gap-4 pt-4">
-            <Button>
+            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
+              Desenvolvo lógica em{" "}
+              <LinkPreview url="https://en.wikipedia.org/wiki/C_(programming_language)" className="font-medium text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700">
+                C
+              </LinkPreview>{" "}
+              — estruturas de dados, memória, funcionamento interno dos programas.
+            </p>
+
+            <p className="text-[15px] font-light leading-relaxed text-neutral-500 dark:text-neutral-400">
+              Construo projetos continuamente para aplicar o que aprendo e evoluir como desenvolvedor.
+            </p>
+          </div>
+
+          {/* Botões */}
+          <div className="flex gap-3 pt-2">
+            <Button className="rounded-full px-6 text-[13px]">
               Ver Projetos
             </Button>
-
-            <Button variant="outline">
+            <Button variant="outline" className="rounded-full px-6 text-[13px] text-neutral-500">
               Fale Comigo
             </Button>
           </div>
         </div>
 
-        <div className="flex justify-center lg:justify-end relative">
+        <div className="flex  justify-center lg:justify-end">
           <PhoneMockup>
             <PhoneContent />
           </PhoneMockup>
