@@ -288,30 +288,6 @@ function StatsScreen({ github }: { github: ReturnType<typeof useGithub> }) {
         </>
       )}
 
-      {/* Commits recentes */}
-      {github.recentCommits.length > 0 && (
-        <>
-          <SectionLabel>Commits Recentes</SectionLabel>
-          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-            {github.recentCommits.slice(0,4).map((c,i)=>(
-              <motion.a key={i} href={c.url} target="_blank" rel="noreferrer"
-                initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }} transition={{ delay:i*0.07 }}
-                style={{ display:"block", padding:"10px 12px", background:T.surface, border:`0.5px solid ${T.border}`, borderRadius:12, textDecoration:"none" }}
-              >
-                <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:3 }}>
-                  <GitCommit size={10} color={T.accent}/>
-                  <span style={{ fontSize:10, color:T.accent, fontWeight:500 }}>{c.repo}</span>
-                  <span style={{ fontSize:10, color:T.label, marginLeft:"auto", display:"flex", alignItems:"center", gap:3 }}>
-                    <Clock size={9}/>{timeAgo(c.date)}
-                  </span>
-                </div>
-                <p style={{ margin:0, fontSize:11, color:T.muted, lineHeight:1.4, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{c.message}</p>
-              </motion.a>
-            ))}
-          </div>
-        </>
-      )}
-
       {/* Radar */}
       <SectionLabel style={{ marginTop:12 }}>Perfil</SectionLabel>
       <GlassCard>{ready && <RadarChart/>}</GlassCard>

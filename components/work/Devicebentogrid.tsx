@@ -4,6 +4,8 @@ import { MacbookIllustration } from "./Macbookillustration";
 import { IphoneIllustration } from "./Iphoneillustration";
 import { IpadIllustration } from "./Ipadillustration";
 import { cn } from "@/lib/utils";
+import { useAnimate } from "motion/react";
+import { useEffect } from "react";
 
 function BentoCard({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
@@ -29,7 +31,7 @@ function CardText({ title, description }: { title: string; description: string }
 
 export function DeviceBentoGrid() {
   return (
-    <div className="mx-auto w-full px-4 py-12">
+    <div id="word" className="mx-auto w-full px-4 py-12">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <BentoCard className="md:col-span-2">
           <MacbookIllustration />
@@ -62,7 +64,6 @@ export function DeviceBentoGrid() {
   );
 }
 
-// Standalone animated sync pill (no device)
 function SyncPill() {
   return (
     <div className="flex min-h-24 items-center justify-center">
@@ -73,9 +74,6 @@ function SyncPill() {
     </div>
   );
 }
-
-import { useAnimate } from "motion/react";
-import { useEffect } from "react";
 
 function SyncStates() {
   const [scope, animate] = useAnimate();

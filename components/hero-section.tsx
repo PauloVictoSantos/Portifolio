@@ -1,110 +1,114 @@
-"use client"
-import { useEffect, useState } from "react"
-import { AnimatedText } from "./animated-text"
+import { ArrowDown, Download, FileDown, Github, Linkedin, SaveIcon } from "lucide-react";
+import { Reveal } from "./Reveal";
+import { WordRotate } from "./WordRotate";
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
+const stack = ["React", "TypeScript", "Next.js", "Tailwind", "Motion", "Three.js", "GraphQL", "Node", "Vite", "Figma"];
 
 export function HeroSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true)
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [])
-
-  useEffect(() => {
-    let rafId: number
-    let currentProgress = 0
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const maxScroll = 400
-      const targetProgress = Math.min(scrollY / maxScroll, 1)
-
-      const smoothUpdate = () => {
-        currentProgress += (targetProgress - currentProgress) * 0.1
-
-        if (Math.abs(targetProgress - currentProgress) > 0.001) {
-          setScrollProgress(currentProgress)
-          rafId = requestAnimationFrame(smoothUpdate)
-        } else {
-          setScrollProgress(targetProgress)
-        }
-      }
-
-      cancelAnimationFrame(rafId)
-      smoothUpdate()
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-      cancelAnimationFrame(rafId)
-    }
-  }, [])
-
-  const easeOutQuad = (t: number) => t * (2 - t)
-  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
-
-  const scale = 1 - easeOutQuad(scrollProgress) * 0.15
-  const borderRadius = easeOutCubic(scrollProgress) * 48
-  const heightVh = 100 - easeOutQuad(scrollProgress) * 37.5
-
   return (
-    <section className="pt-32 pb-12 px-6 min-h-screen flex items-center relative overflow-hidden">
-      <div className="absolute inset-0 top-0">
-        <div
-          className="w-full will-change-transform overflow-hidden"
-          style={{
-            transform: `scale(${scale})`,
-            borderRadius: `${borderRadius}px`,
-            height: `${heightVh}vh`,
-          }}
-        >
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/af7687fd-f2ad-4f2a-96f0-b56fa7d3769c-08wERpo5U1sktxs1vcRsJW9ueslNZv.mp4" />
-        </div>
-      </div>
-
+    <section className="relative overflow-hidden">
       <div
-        className="absolute bottom-0 left-0 right-0 w-full overflow-hidden pointer-events-none z-5 flex items-end justify-center"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
-          transform: `translateY(${scrollProgress * 150}px)`,
-          opacity: 1 - scrollProgress * 0.8,
-          height: "100%",
+          backgroundImage:
+            "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
         }}
-      >
-        <span
-          className="text-background block font-bold text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] tracking-tighter select-none text-center leading-none"
-          style={{ marginBottom: "0" }}
-        >
-          Paulo
-        </span>
+      />
+
+      <div className="relative mx-auto max-w-8xl p-16">
+        <h1 className="mt-8 font-display text-[clamp(2.75rem,9vw,8.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">
+          <Reveal as="span" className="block">Frontend</Reveal>
+          <Reveal as="span" delay={100} className="block italic text-muted-foreground">
+            developer
+          </Reveal>
+          <Reveal as="span" delay={200} className="block">
+            que constrói com
+          </Reveal>
+          <Reveal as="span" delay={300} className="block">
+            <span className="relative inline-block">
+              <WordRotate
+                words={["cuidado.", "ritmo.", "precisão.", "alma."]}
+                className="h-[1.05em]"
+              />
+              <span className="ml-2 inline-block h-[0.8em] w-[0.08em] translate-y-1 bg-primary animate-blink align-middle" />
+            </span>
+          </Reveal>
+        </h1>
+
+        <div className="mt-14 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
+          <Reveal delay={400} className="md:col-span-5">
+            <p className="text-lg text-muted-foreground">
+              Léo Martins — seis anos transformando produtos digitais em
+              experiências cuidadosas. Disponível para projetos selecionados em 2025.
+            </p>
+          </Reveal>
+
+          <Reveal delay={500} className="md:col-span-4 md:col-start-9 flex gap-5 items-center ">
+            <a
+              href="#work"
+              data-cursor-hover
+              className="group inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 text-sm text-background transition-all hover:gap-5"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-background/15">
+                <ArrowDown className="h-3 w-3 transition-transform duration-500 group-hover:translate-y-0.5" />
+              </span>
+              Explorar trabalhos
+            </a>
+
+            <div className="flex gap-5">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon-lg">
+                    <Linkedin />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Linkedin
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon-lg">
+                    <Github />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                Github
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon-lg">
+                    <FileDown />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Curriculo
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </Reveal>
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full relative z-10">
-        <div className="text-center mb-12">
-          <div
-            className={`transition-all duration-1000 delay-[800ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
-          >
-            <h1 className="font-serif text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] xl:text-[7.5rem] 2xl:text-[8.5rem] font-normal leading-tight mb-6 w-full px-4 max-w-6xl mx-auto text-balance">
-              <AnimatedText text="Find your home away from home" delay={0.3} />
-            </h1>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-center gap-8">
-          <div className="relative">
-            <div
-              className={`relative w-58.5 md:w-70.25 lg:w-87.75 will-change-transform transition-all duration-1500 ease-out delay-500 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-100"
-              }`}
-            >
-              <img src="/image/iphone-frame.png" alt="Application Homie" className="w-200 h-200 relative z-10" />
-            </div>
-          </div>
+      {/* Marquee */}
+      <div className="relative border-y border-border bg-card py-5">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...stack, ...stack, ...stack].map((s, i) => (
+            <span key={i} className="mx-8 font-display text-2xl text-muted-foreground">
+              {s}
+              <span className="mx-6 text-foreground/30">✦</span>
+            </span>
+          ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

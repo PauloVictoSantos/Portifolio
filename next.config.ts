@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       "api.microlink.io",
+      "images.domains", 
+      "images.remotePatterns"
     ],
   },
 };

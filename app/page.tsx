@@ -1,14 +1,14 @@
 import AboutSection from "@/components/about/about-section"
-import { ContactSection } from "@/components/contact-section"
-import ExperienceSection from "@/components/experincia"
+import  ContactSection  from "@/components/contact-section"
+import {ExperienceSection} from "@/components/experincia"
 import ProjectSection from "@/components/project-section"
 import SkillsSection from "@/components/skills/skills-section"
 import OnlineUsers from "@/components/OnlineUsers"
 import { ShootingStars } from '@/components/ui/shooting-stars'
-import { StarsBackground } from '@/components/ui/stars-background'
 import { HeroSection } from "@/components/hero-section"
-import { StatsSection } from "@/components/stats-section"
+import { Cursor } from "@/components/Cursor";
 import { DeviceBentoGrid } from "@/components/work/Devicebentogrid";
+import { ScrollProgress } from "@/components/ScrollProgress"
 
 export default function Home() {
   return (
@@ -16,10 +16,11 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <ShootingStars />
       </div>
-
+      <ScrollProgress />
+      <Cursor />
+      
       <main>
         <HeroSection />
-        <StatsSection />
         <AboutSection />
         <DeviceBentoGrid />
         <SkillsSection />

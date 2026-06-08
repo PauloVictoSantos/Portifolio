@@ -4,6 +4,8 @@ import { Analytics } from '@/components/skills/Analytics'
 import './globals.css'
 import { NavbarDemo } from '@/components/navBar'
 import { ThemeProvider } from '@/components/provedor-de-tema'
+import Footer from '@/components/footer'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const _roboto = Roboto({
   subsets: ['latin'],
@@ -38,14 +40,14 @@ export const viewport: Viewport = {
   userScalable: true,
 }
 
-export default function RootLayout({  
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  
+
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className="font-sans antialiased">
         <ThemeProvider
           attribute="class"
@@ -56,9 +58,12 @@ export default function RootLayout({
           <div className="fixed top-0 left-0 right-0 z-50">
             <NavbarDemo />
           </div>
+          <TooltipProvider>
             {children}
+          </TooltipProvider>
           <Analytics />
-        </ ThemeProvider >
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

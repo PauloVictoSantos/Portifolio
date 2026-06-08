@@ -19,7 +19,7 @@ export default function ContactForm() {
           Fale conosco
         </h2>
 
-        <p className="mt-2 text-sm text-neutral-400">
+        <p className="mt-2 text-sm text-foreground">
           Responderemos o mais rápido possível.
         </p>
 

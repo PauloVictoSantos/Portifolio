@@ -1,211 +1,518 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView, Variants } from "framer-motion"
-import { ArrowUpRight, Github } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { projects, techMap } from "@/data/project"
+import { useRef, useState, useCallback } from "react"
+import { motion, useInView, AnimatePresence, type Variants } from "framer-motion"
+import {
+  ArrowUpRight, Github, ArrowRight, X,
+  ExternalLink, ChevronDown, ChevronLeft, ChevronRight,
+  Projector
+} from "lucide-react"
+import { projects, techMap, type TechKey } from "@/data/project"
+import { useGithub } from "@/hooks/useGithub"
+import { Button } from "./ui/button"
+import { ScrollReveal } from "@/components/scroll-reveal"
 
-type TechKey = keyof typeof techMap
+
+const FULL_VISIBLE = 4
+const PEEK_HEIGHT = 300
 
 function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })
+  return new Date(date).toLocaleDateString("pt-BR", { month: "short", year: "numeric" })
 }
 
-const TECHS = ["Next.js","React","TypeScript","Tailwind","Framer Motion","Prisma","C lang","PostgreSQL","Node.js"]
-const LABELS = ["Web App", "Algoritmos", "Full Stack"]
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 70 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.9,
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-    },
-  },
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 48 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 }
 
-const iframeVariants: Variants = {
-  hidden: { scale: 1.04 },
-  visible: {
-    scale: 1,
-    transition: { duration: 7, ease: "easeOut" as const },
-  },
+function TechBadge({
+  techKey,
+  size = "md",
+}: {
+  techKey: TechKey
+  size?: "sm" | "md"
+}) {
+  const tech = techMap[techKey]
+  if (!tech) return null
+  const Icon = tech.icon
+  const colors = tech.color.match(/#([A-Fa-f0-9]{6})/g) || []
+
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground">
+      <svg width="0" height="0">
+        <linearGradient
+          id={`gradient-${techKey}`}
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
+          {colors.map((color, index) => (
+            <stop
+              key={index}
+              offset={`${(index / (colors.length - 1)) * 100}%`}
+              stopColor={color}
+            />
+          ))}
+        </linearGradient>
+      </svg>
+
+      <Icon
+        className="w-3 h-3 shrink-0"
+        style={{
+          fill: `url(#gradient-${techKey})`,
+        }}
+      />
+
+      {tech.name}
+    </span>
+  )
+}
+
+function Carousel({ images }: { images: string[] }) {
+  const [current, setCurrent] = useState(0)
+  const total = images.length
+
+  const prev = useCallback(() => setCurrent(c => (c - 1 + total) % total), [total])
+  const next = useCallback(() => setCurrent(c => (c + 1) % total), [total])
+
+  if (!total) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-muted">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">sem preview</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative h-full w-full overflow-hidden select-none group">
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={current}
+          src={images[current]}
+          alt={`preview ${current + 1}`}
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.5, ease: [0.32, 0, 0.67, 0] }}
+          draggable={false}
+        />
+      </AnimatePresence>
+
+      <div className="absolute inset-0 bg-linear-to-b from-black/30 via-transparent to-black/50 pointer-events-none" />
+
+      {total > 1 && (
+        <>
+          <Button
+            onClick={prev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-black/60"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+          <Button
+            onClick={next}
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-black/60"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+            {images.map((_, i) => (
+              <Button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`h-1 rounded-full transition-all duration-300 ${i === current ? "w-5 bg-accent" : "w-1.5 bg-accent/40"
+                  }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function getImages(project: any): string[] {
+  if (project.images?.length) return project.images
+  if (project.image) return [project.image]
+  return []
 }
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-12%" })
+  const isInView = useInView(ref, { once: true, margin: "-8%" })
   const isReversed = index % 2 !== 0
+  const images = getImages(project)
 
   return (
-    <motion.div
+    <motion.article
       ref={ref}
-      variants={cardVariants}
+      variants={fadeUp}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      className={`grid grid-cols-1 lg:grid-cols-2 rounded-2xl border border-[#161616] overflow-hidden ${
-        isReversed ? "lg:[&>*:first-child]:order-2" : ""
-      }`}
+      className="grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-border bg-card"
     >
-      <div className="relative overflow-hidden  min-h-130 lg:min-h-150">
-          <iframe
-            src={project.site}
-            className="w-full h-full border-none"
-            loading="lazy"
-            title={project.title}
-            // pointer-events ativo = scroll funciona dentro do iframe
-          />
-+
-        {/* Overlay leve só nas bordas, sem bloquear cliques */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(8,8,8,0.4) 0%, transparent 15%, transparent 80%, rgba(8,8,8,0.6) 100%)",
-          }}
-        />
+      <div className={`relative min-h-72 lg:min-h-110 ${isReversed ? "lg:order-2" : ""}`}>
+        <Carousel images={images} />
 
-        {/* Ghost number */}
         <span
-          className="absolute bottom-4 left-5 text-[6rem] font-extrabold leading-none select-none pointer-events-none z-10"
-          style={{ color: "rgba(74,222,128,0.07)", letterSpacing: "-0.06em" }}
-          aria-hidden="true"
+          className="absolute bottom-4 left-5 z-10 font-black text-[5rem] leading-none tracking-tighter text-foreground select-none pointer-events-none"
+          aria-hidden
         >
           {String(index + 1).padStart(2, "0")}
         </span>
-
-        {/* Category badge */}
-        <Badge
-          variant="outline"
-          className="absolute top-4 left-4 z-10 pointer-events-none text-green-400 border-green-400/25 bg-green-400/10 text-[10px] tracking-widest uppercase font-medium"
-        >
-          {LABELS[index] ?? "Projeto"}
-        </Badge>
       </div>
 
-      {/* Info */}
       <div
-        className={`flex flex-col justify-center gap-5 px-8 py-14 border-[#161616] ${
-          isReversed ? "lg:border-r" : "lg:border-l"
-        }`}
+        className={`flex flex-col justify-between gap-6 p-8 lg:p-10 ${isReversed ? "lg:border-r border-border" : "lg:border-l border-border"
+          }`}
       >
-        <span className="text-[11px] tracking-widest uppercase text-[#272727] font-medium">
-          Projeto {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-        </span>
+        <div className="flex flex-col gap-5">
+          <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-foreground/50">
+            {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+          </p>
 
-        <h2 className="text-[clamp(1.6rem,2.8vw,2.2rem)] font-extrabold tracking-tight leading-[1.08]">
+          <div>
+            <h2 className="text-[clamp(1.6rem,2.4vw,2.1rem)] font-black leading-[1.06] tracking-tight text-foreground">
+              {project.title}
+              <span className="text-accent">.</span>
+            </h2>
+            <time className="mt-1.5 block text-[11px] tracking-widest text-foreground/50 uppercase">
+              {formatDate(project.createdAt)}
+            </time>
+          </div>
+
+          <div className="h-px w-10 bg-border" />
+
+          <p className="leading-[1.9] text-foreground font-light ">
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((key: TechKey) => (
+              <TechBadge key={key} techKey={key} size="md" />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 pt-5 border-t border-border">
+          {project.site && (
+            <a
+              href={project.site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-[11px] font-bold tracking-wider uppercase text-background transition-all duration-200 hover:opacity-80 hover:-translate-y-px"
+            >
+              Ver projeto <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
+            </a>
+          )}
+          <a
+            href={project.code}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground underline underline-offset-4 transition-opacity hover:text-accent"
+          >
+            <Github className="w-3.5 h-3.5 text-accent" /> Código
+          </a>
+        </div>
+      </div>
+    </motion.article>
+  )
+}
+
+function ProjectCardCompact({ project, index }: { project: any; index: number }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-8%" })
+  const images = getImages(project)
+
+  return (
+    <motion.article
+      ref={ref}
+      variants={fadeUp}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      className="rounded-2xl overflow-hidden border border-border bg-card group flex flex-col"
+    >
+      <div className="relative overflow-hidden h-52 shrink-0">
+        <Carousel images={images} />
+      </div>
+
+      <div className="flex flex-col gap-3 p-5 flex-1">
+        <h3 className="text-base font-black tracking-tight leading-tight text-foreground">
           {project.title}
-        </h2>
+          <span className="text-primary">.</span>
+        </h3>
 
-        <span className="text-[11px] tracking-wider text-gray-600">
-          {formatDate(project.createdAt)}
-        </span>
-
-        <Separator className="bg-green-400/30 w-8" />
-
-        <p className="text-[13px] leading-[1.85] text-gray-500 font-light max-w-sm">
+        <p className="text-[12px] leading-[1.7] text-muted-foreground font-light line-clamp-2">
           {project.description}
         </p>
 
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((key: string) => (
-            <Badge
-              key={key}
-              variant="outline"
-              className="text-[10px] tracking-wider uppercase text-gray-600 border-[#1e1e1e] bg-[#0a0a0a] rounded-md"
+        <div className="flex flex-wrap gap-1.5">
+          {project.tech.slice(0, 5).map((key: TechKey) => (
+            <TechBadge key={key} techKey={key} size="sm" />
+          ))}
+          {project.tech.length > 5 && (
+            <span className="inline-flex items-center rounded-md border border-border bg-background px-2 py-0.5 text-[9px] font-semibold tracking-wider uppercase">
+              +{project.tech.length - 5}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3 mt-auto pt-3 border-t border-border">
+          {project.site && (
+            <a
+              href={project.site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider uppercase text-background bg-foreground rounded-full px-3 py-1.5 transition-opacity hover:opacity-70"
             >
-              {(techMap as Record<string, { name: string }>)[key]?.name ?? key}
-            </Badge>
+              Ver <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+          )}
+          <a
+            href={project.code}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground underline underline-offset-4 transition-opacity hover:opacity-60"
+          >
+            <Github className="w-3 h-3" /> GitHub
+          </a>
+          <time className="ml-auto text-[10px] tracking-wider text-muted-foreground/40 uppercase">
+            {formatDate(project.createdAt)}
+          </time>
+        </div>
+      </div>
+    </motion.article>
+  )
+}
+
+function StatsBar() {
+  const { publicRepos, languages, recentCommits, loading } = useGithub()
+
+  const items = [
+    { n: loading ? "…" : `${publicRepos}+`, label: "repositórios" },
+    { n: loading ? "…" : `${languages.length || "—"}`, label: "linguagens" },
+    { n: loading ? "…" : `${recentCommits.length * 8}+`, label: "commits" },
+  ]
+
+  return (
+    <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-border">
+      {items.map((s, i) => (
+        <div
+          key={i}
+          className={`p-7 bg-card ${i < 2 ? "border-r border-border" : ""}`}
+        >
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            className="text-[2.2rem] font-black leading-none tracking-tighter text-foreground"
+          >
+            {s.n}
+          </motion.p>
+          <p className="mt-2 text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
+            {s.label}
+          </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function RecentCommits() {
+  const { recentCommits, loading } = useGithub()
+  if (loading || !recentCommits.length) return null
+
+  return (
+    <div className="mt-12">
+      <p className="mb-5 text-[10px] font-semibold tracking-[0.22em] uppercase text-muted-foreground/50">
+        Atividade recente
+      </p>
+      <div className="flex flex-col divide-y divide-border">
+        {recentCommits.map((c, i) => (
+          <motion.a
+            key={i}
+            href={c.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, x: -8 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: i * 0.04 }}
+            className="group flex items-start gap-4 py-4 no-underline"
+          >
+            <span className="mt-1.75 h-1.5 w-1.5 shrink-0 rounded-full bg-chart-2" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-medium text-foreground transition-colors group-hover:text-primary">
+                {c.message || "(sem mensagem)"}
+              </p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground/50">
+                <span className="font-semibold text-chart-1">{c.repo}</span>
+                {" · "}
+                {formatDate(c.date)}
+              </p>
+            </div>
+            <ExternalLink className="mt-1 h-3 w-3 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-50" />
+          </motion.a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function AllProjectsPage({ onClose }: { onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 32 }}
+      transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-50 overflow-y-auto bg-background"
+    >
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/90 px-8 py-4 backdrop-blur-md md:px-14">
+        <div className="flex items-center gap-3">
+          <motion.span
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.6, repeat: Infinity }}
+            className="inline-block h-2 w-2 rounded-full bg-chart-2"
+          />
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-foreground">
+            todos os projetos
+          </span>
+          <span className="text-[11px] tracking-widest text-muted-foreground">
+            ({projects.length})
+          </span>
+        </div>
+        <Button
+          onClick={onClose}
+          className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground transition-opacity hover:opacity-70"
+        >
+          <X className="h-3.5 w-3.5" /> Fechar
+        </Button>
+      </div>
+
+      <div className="px-8 pb-24 pt-14 md:px-14">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-14"
+        >
+          <h1 className="text-[clamp(2.2rem,5vw,3.4rem)] font-black leading-[1.03] tracking-tight text-foreground">
+            Todos os<br />
+            <span className="text-primary">projetos.</span>
+          </h1>
+          <p className="mt-4 max-w-md text-sm font-light leading-[1.8] text-muted-foreground">
+            Arquitetura limpa, código que escala e interfaces que impressionam — do conceito ao deploy.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {projects.map((project, i) => (
+            <ProjectCardCompact key={i} project={project} index={i} />
           ))}
         </div>
 
-        <div className="flex gap-3 items-center pt-1">
-          <Button
-            asChild
-            className="bg-green-400 text-[#080808] hover:bg-green-300 text-[11px] font-bold tracking-widest uppercase rounded-xl h-10 px-5 transition-all hover:-translate-y-0.5"
-          >
-            <a href={project.site} target="_blank" rel="noopener noreferrer">
-              Ver projeto <ArrowUpRight size={13} className="ml-1" />
-            </a>
-          </Button>
-
-          <Button
-            asChild
-            variant="outline"
-            className="border-[#1e1e1e] bg-transparent text-gray-500 hover:border-green-400/50 hover:text-green-400 hover:bg-transparent text-[11px] font-bold tracking-widest uppercase rounded-xl h-10 px-5 transition-all hover:-translate-y-0.5"
-          >
-            <a href={project.code} target="_blank" rel="noopener noreferrer">
-              <Github size={14} className="mr-1.5" /> GitHub
-            </a>
-          </Button>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-20"
+        >
+          <StatsBar />
+          <RecentCommits />
+        </motion.div>
       </div>
     </motion.div>
   )
 }
 
 export default function ProjectSection() {
+  const [showAll, setShowAll] = useState(false)
+  const hasMore = projects.length > FULL_VISIBLE
+  const peekIndex = FULL_VISIBLE
+
   return (
-    <section id="projetos" className="w-full pb-20">
-      <div className="w-full">
+    <>
+      <AnimatePresence>
+        {showAll && <AllProjectsPage onClose={() => setShowAll(false)} />}
+      </AnimatePresence>
 
-        <motion.header
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="px-8 md:px-14 pt-20 pb-8"
-        >
-          <div className="flex items-center gap-2 mb-5">
-            <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_#4ade80] animate-pulse" />
-            <span className="text-[11px] tracking-[.18em] uppercase text-green-400 font-medium">
-              projetos selecionados
-            </span>
-          </div>
-          <h1 className="text-[clamp(2.4rem,6vw,3.4rem)] font-extrabold leading-[.95] tracking-tight mb-4">
-            Experiência em<br />
-            <span className="text-green-400">desenvolvimento</span>
-          </h1>
-          <p className="text-sm text-gray-500 font-light leading-relaxed max-w-sm">
-            Cada projeto resolveu um problema real — arquitetura limpa,
-            código que escala e interfaces que impressionam.
-          </p>
-        </motion.header>
-
-        <div className="flex flex-col gap-24 px-8 md:px-14 py-16">
-          {projects.map((project, i) => (
-            <ProjectCard key={i} project={project} index={i} />
-          ))}
-        </div>
-
-        <div className="px-8 md:px-14">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-            className="grid grid-cols-3 border border-[#161616] rounded-2xl overflow-hidden"
+      <section id="projetos" className="w-full bg-background pb-24">
+          <ScrollReveal
+            blur
+            className="mb-16 flex flex-col items-start gap-4 px-6"
           >
-            {[
-              { n: projects.length, label: "projetos" },
-              { n: 9, label: "tecnologias" },
-              { n: "142+", label: "commits" },
-            ].map((s, i) => (
-              <div key={i} className="bg-[#0d0d0d] py-8 px-7 border-r last:border-r-0 border-[#161616]">
-                <div className="text-[2.6rem] font-extrabold tracking-[-0.04em] leading-none">
-                  {s.n}{i === 2 && <span className="text-green-400"></span>}
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground backdrop-blur">
+              <Projector className="size-3.5 text-accent" aria-hidden="true" />
+              Projetos
+            </span>
+            <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
+              Do código à interface.
+            </h2>
+            <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+              Cada projeto resolveu um problema real — arquitetura limpa,
+              código que escala e interfaces que impressionam.
+            </p>
+          </ScrollReveal>
+
+        <div className="flex flex-col gap-16 px-8 py-10 md:px-14">
+          {projects.map((project, i) => {
+            const isPeek = hasMore && i === peekIndex
+            const isHidden = hasMore && i > peekIndex
+            if (isHidden) return null
+
+            if (isPeek) {
+              return (
+                <div key={i} className="relative">
+                  <div className="overflow-hidden rounded-2xl" style={{ maxHeight: PEEK_HEIGHT }}>
+                    <ProjectCard project={project} index={i} />
+                  </div>
+
+                  <div
+                    className="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-2xl"
+                    style={{
+                      height: PEEK_HEIGHT,
+                      background: "linear-gradient(to bottom, transparent 0%, var(--background) 78%)",
+                    }}
+                  />
+
+                  <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-end gap-3 pb-8">
+                    <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-muted-foreground">
+                      +{projects.length - FULL_VISIBLE} projetos restantes
+                    </p>
+                    <motion.button
+                      onClick={() => setShowAll(true)}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="group inline-flex items-center gap-2 rounded-full bg-foreground px-7 py-3.5 text-[11px] font-bold tracking-wider uppercase text-background transition-opacity hover:opacity-80"
+                    >
+                      <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
+                      Ver todos os projetos
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </motion.button>
+                  </div>
                 </div>
-                <div className="text-[10px] tracking-widest uppercase text-gray-700 mt-2">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
+              )
+            }
+
+            return <ProjectCard key={i} project={project} index={i} />
+          })}
         </div>
 
-      </div>
-    </section>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-4 px-8 md:px-14"
+        >
+          <StatsBar />
+        </motion.div>
+      </section>
+    </>
   )
 }
