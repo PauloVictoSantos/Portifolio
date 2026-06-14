@@ -8,8 +8,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-const stack = ["React", "TypeScript", "Next.js", "Tailwind", "Motion", "Three.js", "GraphQL", "Node", "Vite", "Figma"];
-
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
@@ -22,7 +20,7 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative mx-auto max-w-8xl p-16">
+      <div className="relative mx-auto max-w-8xl p-6">
         <h1 className="mt-8 font-display text-[clamp(2.75rem,9vw,8.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">
           <Reveal as="span" className="block">Frontend</Reveal>
           <Reveal as="span" delay={100} className="block italic text-muted-foreground">
@@ -98,17 +96,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Marquee */}
-      <div className="relative border-y border-border bg-card py-5">
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...stack, ...stack, ...stack].map((s, i) => (
-            <span key={i} className="mx-8 font-display text-2xl text-muted-foreground">
-              {s}
-              <span className="mx-6 text-foreground/30">✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }

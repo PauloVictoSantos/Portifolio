@@ -2,7 +2,7 @@ import AboutSection from "@/components/about/about-section"
 import  ContactSection  from "@/components/contact-section"
 import {ExperienceSection} from "@/components/experincia"
 import ProjectSection from "@/components/project-section"
-import SkillsSection from "@/components/skills/skills-section"
+import SkillsSection from "@/components/skills-section"
 import OnlineUsers from "@/components/OnlineUsers"
 import { ShootingStars } from '@/components/ui/shooting-stars'
 import { HeroSection } from "@/components/hero-section"

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Roboto } from 'next/font/google'
-import { Analytics } from '@/components/skills/Analytics'
+import { Analytics } from '@/components/about/Analytics'
 import './globals.css'
 import { NavbarDemo } from '@/components/navBar'
 import { ThemeProvider } from '@/components/provedor-de-tema'
