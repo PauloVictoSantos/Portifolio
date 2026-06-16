@@ -14,20 +14,14 @@ function CTAButtons() {
   const buttons = [
     {
       label: "LinkedIn",
-      icon: <Linkedin className="h-4 w-4" />,
-      href: "https://www.linkedin.com/in/paulo-victor-8b05133a0",
+      icon: <Linkedin className="h-4 w-4 text-accent" />,
+      href: "https://www.linkedin.com/in/paulovictorcs",
       primary: true,
     },
     {
       label: "GitHub",
-      icon: <Github className="h-4 w-4" />,
+      icon: <Github className="h-4 w-4 text-accent" />,
       href: "https://github.com/PauloVictoSantos",
-      primary: false,
-    },
-    {
-      label: "Currículo",
-      icon: <FileText className="h-4 w-4" />,
-      href: "/curriculo.pdf",
       primary: false,
     },
   ]
@@ -47,7 +41,7 @@ function CTAButtons() {
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.97 }}
           className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-200 ${btn.primary
-            ? "bg-violet-600 text-white shadow-lg shadow-violet-600/25 hover:bg-violet-700"
+            ? "bg-foreground text-background shadow-lg shadow-foreground-600/25 hover:bg-foreground-700"
             : "border border-border bg-card text-foreground shadow-sm hover:bg-accent"
             }`}
         >
@@ -67,7 +61,7 @@ export default function AboutSection() {
     hidden: {},
     visible: { transition: { staggerChildren: 0.12 } },
   }
-  
+
   const item: Variants = {
     hidden: { opacity: 0, y: 24 },
     visible: {
@@ -96,26 +90,14 @@ export default function AboutSection() {
           <motion.div variants={item} className="relative inline-block">
             <Reveal delay={80}>
               <h2 className="mt-3 font-display text-7xl font-extrabold leading-tight tracking-tight ">
-                Olá, meu nome é <br />
-                <span className="italic text-muted-foreground">Paulo.</span>
+                Um pouco sobre mim e minha trajetória na programação.
               </h2>
             </Reveal>
-            <TooltipCard
-              containerClassName="absolute -right-6 top-1 cursor-pointer hidden sm:inline-flex"
-              content={
-                <div className="text-sm">
-                  <p className="mb-1 font-semibold">Sobre esta seção:</p>
-                  <p>Aqui apresento minha trajetória, formação e objetivos como desenvolvedor.</p>
-                </div>
-              }
-            >
-              <Info className="h-4 w-4 text-accent transition" />
-            </TooltipCard>
           </motion.div>
 
           <motion.h2 variants={item} className="text-semibold leading-snug text-foreground lg:text-lg">
             Desenvolvedor{" "}
-            <LinkPreview url="https://react.dev" className="text-accent">
+            <LinkPreview url="https://en.wikipedia.org/wiki/Front-end_web_development" className="text-accent">
               Front-end
             </LinkPreview>
           </motion.h2>
@@ -124,26 +106,31 @@ export default function AboutSection() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <GraduationCap className="h-4 w-4 shrink-0 text-foreground/70" />
               <span>
-                Engenharia da Computação · Técnico em{" "}
+                Graduando em Engenharia da Computação  {" "}
+                <LinkPreview url="https://fametro.edu.br/" className="text-foreground hover:text-accent">
+                  Fametro
+                </LinkPreview>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <GraduationCap className="h-4 w-4 shrink-0 text-foreground/70" />
+              <span>
+                Técnico em Desevolvimento de Sistema {" "}
                 <LinkPreview url="https://www2.ifam.edu.br/campus/cprf" className="text-foreground hover:text-accent">
                   IFAM
                 </LinkPreview>
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0 text-red-500" />
-              <span>Manaus, AM · 21 anos</span>
-            </div>
           </motion.div>
 
           <motion.div variants={item} className="space-y-4 text-base leading-relaxed text-muted-foreground">
             <p>
-              Minha trajetória começou no{" "}
+              Tenho 21 anos, moro em manaus e minha trajetória começou no{" "}
               <LinkPreview url="https://www.ifam.edu.br" className="text-foreground">
                 IFAM
               </LinkPreview>
-              , onde me formei Técnico em Desenvolvimento de Sistemas — foi lá que aprendi que programar é resolver
-              problemas reais, não só escrever código que compila.
+              , onde me formei Técnico em Desenvolvimento de Sistemas. Foi lá, durante o programa Capacitação 4.0
+              que estagiei no Polo Industrial de Manaus. Foi nesse ambiente que vivencie na prática metodologias ágeis.
             </p>
             <p>
               Hoje curso{" "}
@@ -153,11 +140,11 @@ export default function AboutSection() {
               >
                 Engenharia da Computação
               </LinkPreview>{" "}
-              e já coloquei a mão em produção: estagiei na{" "}
-              <LinkPreview url="https://www.embrapa.br" className="text-foreground">
-                Embrapa
-              </LinkPreview>{" "}
-              no Polo Industrial de Manaus, onde entendi o que é entregar software em contexto real.
+              na {" "}
+              <LinkPreview url="https://fametro.edu.br/" className="text-foreground hover:text-accent">
+                Fametro
+              </LinkPreview>
+              e dedico meus esforços para dominar o desenvolvimento Full Stack. Crio interfaces modernas e, ao mesmo tempo exploro a lógica e os banco de dados do back-end.  
             </p>
           </motion.div>
 
