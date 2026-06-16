@@ -3,10 +3,11 @@ import { Reveal } from "./Reveal";
 import { WordRotate } from "./WordRotate";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden">
+    <section id="home" className="relative overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
@@ -20,17 +21,17 @@ export function HeroSection() {
 
       <div className="relative mx-auto px-6 pt-28 pb-20">
         <h1 className="mt-8 font-display text-[clamp(2.75rem,9vw,8.5rem)] font-medium leading-[0.95] tracking-[-0.03em]">
-          <Reveal as="span" className="block">Frontend</Reveal>
+          <Reveal as="span" className="block">Paulo Victor</Reveal>
           <Reveal as="span" delay={100} className="block italic text-muted-foreground">
             developer
           </Reveal>
           <Reveal as="span" delay={200} className="block">
-            que constrói com
+            que constrói
           </Reveal>
           <Reveal as="span" delay={300} className="block">
             <span className="relative inline-flex items-baseline">
               <WordRotate
-                words={["cuidado.", "ritmo.", "precisão.", "alma."]}
+                words={["Front-end.", "Sites.", "Modernidade.", "Software."]}
                 className="h-[1.05em]"
               />
               <span className="ml-1 inline-block h-[0.75em] w-[0.06em] translate-y-1 bg-accent align-middle animate-blink" />
@@ -41,9 +42,8 @@ export function HeroSection() {
         <div className="mt-14 grid grid-cols-1 items-end gap-10 md:grid-cols-12">
           <Reveal delay={400} className="md:col-span-5">
             <p className="text-lg leading-relaxed text-muted-foreground">
-              <span className="text-foreground">Paulo Victor</span> — desenvolvedor front-end
-              transformando ideias em produtos digitais cuidadosos. Disponível para
-              projetos selecionados.
+              <span className="text-foreground">Paulo Victor. </span> Sou um desenvolvedor front-end
+              que gosta de contruir aplicações reais, complexas e desafiadoras - entregando soluções com Nextjs, React e Typescript.
             </p>
           </Reveal>
 
@@ -61,16 +61,16 @@ export function HeroSection() {
             <TooltipProvider delayDuration={120}>
               <div className="flex gap-2">
                 {[
-                  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/paulo-victor-8b05133a0" },
+                  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/paulovictorcs" },
                   { icon: Github, label: "GitHub", href: "https://github.com/PauloVictoSantos" },
                   { icon: FileDown, label: "Currículo", href: "/curriculo.pdf" },
                 ].map(({ icon: Icon, label, href }) => (
                   <Tooltip key={label}>
                     <TooltipTrigger asChild>
                       <Button asChild variant="outline" size="icon" className="h-11 w-11 rounded-full">
-                        <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                        <Link href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
                           <Icon />
-                        </a>
+                        </Link>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>{label}</TooltipContent>

@@ -16,7 +16,7 @@ import { ModeToggle } from "./ModeToggle";
 
 export function NavbarDemo() {
   const navItems = [
-    { name: "Home", link: "#home" },
+    { name: "Inicio", link: "#home" },
     { name: "Sobre mim", link: "#about" },
     { name: "Skills", link: "#skills" },
     { name: "Projetos", link: "#projetos" },
