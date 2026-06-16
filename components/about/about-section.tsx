@@ -4,7 +4,7 @@ import type React from "react"
 import { Info, Star, MapPin, GraduationCap, FileText, Github, Linkedin } from "lucide-react"
 import { TooltipCard } from "@/components/ui/tooltip-card"
 import { LinkPreview } from "@/components/ui/link-preview"
-import { motion, useInView } from "motion/react"
+import { motion, useInView, type Variants } from "motion/react"
 import { useRef } from "react"
 import { Reveal } from "../Reveal"
 import PhoneMockup from './PhoneMockup'
@@ -67,10 +67,18 @@ export default function AboutSection() {
     hidden: {},
     visible: { transition: { staggerChildren: 0.12 } },
   }
-  const item = {
-    hidden: { opacity: 0, y: 28 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
-  }
+  
+  const item: Variants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+  };
 
   return (
     <section
