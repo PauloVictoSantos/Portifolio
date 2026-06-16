@@ -18,7 +18,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/skills/ui/card"
+} from "@/components/ui/card"
 
 export function ChartRadarDots() {
   const data = useGithubLanguages()
