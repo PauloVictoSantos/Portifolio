@@ -17,6 +17,7 @@ export function ParticleField() {
     if (!canvas) return
     const ctx = canvas.getContext("2d")
     if (!ctx) return
+    if (!ctx!) return
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -37,7 +38,7 @@ export function ParticleField() {
       dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = width * dpr
       canvas.height = height * dpr
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx!!.setTransform(dpr, 0, 0, dpr, 0, 0)
 
       // densidade de partículas baseada na área
       const count = Math.min(70, Math.max(28, Math.floor((width * height) / 9000)))
@@ -53,7 +54,7 @@ export function ParticleField() {
     const color = "#e2e8f0"
 
     function draw() {
-      ctx.clearRect(0, 0, width, height)
+      ctx!!.clearRect(0, 0, width, height)
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i]
@@ -81,11 +82,11 @@ export function ParticleField() {
         if (p.y > height) p.y = 0
 
         // desenha partícula
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2)
-        ctx.fillStyle = color
-        ctx.globalAlpha = 0.9
-        ctx.fill()
+        ctx!.beginPath()
+        ctx!.arc(p.x, p.y, 2, 0, Math.PI * 2)
+        ctx!.fillStyle = color
+        ctx!.globalAlpha = 0.9
+        ctx!.fill()
       }
 
       // conexões
@@ -95,17 +96,17 @@ export function ParticleField() {
           const b = particles[j]
           const dist = Math.hypot(a.x - b.x, a.y - b.y)
           if (dist < 120) {
-            ctx.beginPath()
-            ctx.moveTo(a.x, a.y)
-            ctx.lineTo(b.x, b.y)
-            ctx.strokeStyle = color
-            ctx.globalAlpha = (1 - dist / 120) * 0.35
-            ctx.lineWidth = 1
-            ctx.stroke()w
+            ctx!.beginPath()
+            ctx!.moveTo(a.x, a.y)
+            ctx!.lineTo(b.x, b.y)
+            ctx!.strokeStyle = color
+            ctx!.globalAlpha = (1 - dist / 120) * 0.35
+            ctx!.lineWidth = 1
+            ctx!.stroke()
           }
         }
       }
-      ctx.globalAlpha = 1
+      ctx!.globalAlpha = 1
 
       animationId = requestAnimationFrame(draw)
     }
