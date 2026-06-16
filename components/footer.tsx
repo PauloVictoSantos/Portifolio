@@ -20,7 +20,7 @@ export default function Footer() {
 
             <p className="text-sm md:text-base text-foreground max-w-sm leading-relaxed">
               Estufa inteligente com IA, sensores IoT e monitoramento em tempo real.
-              Tecnologia inspirada na Amazônia 
+              Tecnologia inspirada na Amazônia
             </p>
           </div>
 
@@ -30,12 +30,14 @@ export default function Footer() {
                 Sessões
               </span>
 
-              <div className="flex gap-16">
+              <div className="flex gap-8">
                 {[
-                  { label: 'Inicio', href: '#inicio' },
-                  { label: 'Sobre', href: '#about' },
-                  { label: 'Word', href: '#word' },
-                  { label: 'CTA', href: '#cta' },
+                  { label: "Home", href: "#home" },
+                  { label: "Sobre mim", href: "#about" },
+                  { label: "Skills", href: "#skills" },
+                  { label: "Projetos", href: "#projetos" },
+                  { label: "Experiencia", href: "#experiencia" },
+                  { label: "Contato", href: "#contact" },
                 ].map((item) => (
                   <Link
                     key={item.href}

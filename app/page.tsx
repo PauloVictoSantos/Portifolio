@@ -13,9 +13,6 @@ import { ScrollProgress } from "@/components/ScrollProgress"
 export default function Home() {
   return (
     <div className="relative">
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <ShootingStars />
-      </div>
       <ScrollProgress />
       <Cursor />
       

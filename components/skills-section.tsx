@@ -1,13 +1,11 @@
+
 "use client"
 import { useState, useEffect } from "react";
 import { Reveal } from "./Reveal";
+import { skills, SkillsKey } from "@/data/project";
+import { useTheme } from "next-themes";
 
-const SKILLS = [
-  "React", "TypeScript", "Next.js", "Tailwind", "Motion", "Three.js",
-  "GraphQL", "Node", "Vite", "Figma", "Vue", "Astro",
-  "Zustand", "Query", "Prisma", "Supabase", "Vitest", "Playwright",
-  "Storybook", "Radix", "tRPC", "Sass", "PostgreSQL", "Docker",
-];
+const SKILLS_KEYS = Object.keys(skills) as SkillsKey[];
 
 interface OrbitProps {
   radius: number;
@@ -19,15 +17,20 @@ interface OrbitProps {
 }
 
 function SemiCircleOrbit({ radius, centerX, centerY, count, iconSize, startIndex }: OrbitProps) {
+  const { resolvedTheme } = useTheme();
+
   return (
     <>
       {Array.from({ length: count }).map((_, index) => {
         const angle = (index / (count - 1)) * 180;
         const x = radius * Math.cos((angle * Math.PI) / 180);
         const y = radius * Math.sin((angle * Math.PI) / 180);
-        const label = SKILLS[(startIndex + index) % SKILLS.length];
+        const techKey = SKILLS_KEYS[(startIndex + index) % SKILLS_KEYS.length];
+        const tech = skills[techKey];
         const tooltipAbove = angle > 90;
-
+        const iconColor = resolvedTheme === "dark"
+          ? (tech.darkColor ?? tech.color)
+          : tech.color;
         return (
           <div
             key={index}
@@ -39,18 +42,15 @@ function SemiCircleOrbit({ radius, centerX, centerY, count, iconSize, startIndex
             }}
           >
             <div
-              className="flex items-center justify-center rounded-full border border-border bg-card text-[11px] font-medium text-foreground/80 shadow-sm transition-all duration-300 hover:scale-110 hover:border-accent hover:text-accent hover:shadow-accent/20 cursor-default"
+              className="flex items-center justify-center"
               style={{ width: iconSize, height: iconSize }}
-              title={label}
             >
-              <span className="px-1 truncate" style={{ fontSize: Math.max(9, iconSize * 0.22) }}>
-                {label}
-              </span>
+              <tech.icon size={iconSize * 0.55} color={iconColor} />
             </div>
             <div
               className={`absolute ${tooltipAbove ? "bottom-[calc(100%+8px)]" : "top-[calc(100%+8px)]"} hidden group-hover:block whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-[10px] tracking-wider uppercase text-background shadow-lg`}
             >
-              {label}
+              {tech.name}
             </div>
           </div>
         );
@@ -59,9 +59,8 @@ function SemiCircleOrbit({ radius, centerX, centerY, count, iconSize, startIndex
   );
 }
 
-export default function SkillsSection() {
+export default function TechMapSection() {
   const [width, setWidth] = useState(0);
-
   useEffect(() => {
     const update = () => setWidth(window.innerWidth);
     update();
@@ -71,12 +70,11 @@ export default function SkillsSection() {
 
   const baseWidth = Math.min(width * 0.85, 760);
   const centerX = baseWidth / 2;
-  const centerY = baseWidth * 0.5;
-  const iconSize = width < 480 ? 44 : width < 768 ? 54 : 64;
+  const centerY = baseWidth * 0.55;
+  const iconSize = width < 480 ? 40 : width < 768 ? 50 : 60;
 
   return (
     <section id="skills" className="relative py-44 overflow-hidden">
-      {/* Soft accent glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-150 w-150 -translate-x-1/2 -translate-y-1/4 rounded-full opacity-40 blur-3xl"
@@ -84,11 +82,6 @@ export default function SkillsSection() {
       />
 
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 text-center sm:px-10 lg:px-16">
-        <Reveal>
-          <span className="inline-flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-muted-foreground">
-            <span className="h-px w-8 bg-border" /> Stack
-          </span>
-        </Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 font-display text-5xl font-medium tracking-tight md:text-6xl lg:text-7xl">
             Tecnologias na <span className="italic text-accent">órbita</span>.
@@ -106,7 +99,7 @@ export default function SkillsSection() {
             className="relative mt-16"
             style={{ width: baseWidth, height: baseWidth * 0.55 }}
           >
-            <SemiCircleOrbit radius={baseWidth * 0.22} centerX={centerX} centerY={centerY} count={5} iconSize={iconSize} startIndex={0} />
+            {/* <SemiCircleOrbit radius={baseWidth * 0.22} centerX={centerX} centerY={centerY} count={5} iconSize={iconSize} startIndex={0} /> */}
             <SemiCircleOrbit radius={baseWidth * 0.36} centerX={centerX} centerY={centerY} count={7} iconSize={iconSize} startIndex={5} />
             <SemiCircleOrbit radius={baseWidth * 0.5} centerX={centerX} centerY={centerY} count={9} iconSize={iconSize} startIndex={12} />
           </div>

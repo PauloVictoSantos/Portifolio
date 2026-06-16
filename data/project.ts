@@ -1,3 +1,4 @@
+import type { IconType } from "react-icons/lib";
 import {
   SiReact,
   SiNextdotjs,
@@ -9,6 +10,10 @@ import {
   SiFramer,
   SiSupabase,
   SiGooglemaps,
+  SiGithub,
+  SiMysql,
+  SiPostman,
+  SiGoogle,
 } from "react-icons/si";
 
 export type Project = {
@@ -19,6 +24,45 @@ export type Project = {
   site: string;
   tech: TechKey[];
   createdAt: string;
+};
+
+export type SkillsKey =
+  | "react"
+  | "nextjs"
+  | "typescript"
+  | "framer"
+  | "tailwind"
+  | "vercel"
+  | "supabase"
+  | "github"
+  | "nodejs"
+  | "mysql"
+  | "postman"
+  | "PostgreSQL"
+  | "google";
+
+export const skills: Record<
+  SkillsKey,
+  { name: string; color: string; darkColor?: string; icon: IconType }
+> = {
+  react: { name: "React", color: "#61DAFB", icon: SiReact },
+  nextjs:     { name: "Next.js",       color: "#171717",  darkColor: "#ffffff", icon: SiNextdotjs },
+  vercel:     { name: "Vercel",       color: "#171717",  darkColor: "#ffffff", icon: SiVercel },
+  typescript: { name: "TypeScript", color: "#3178C6", icon: SiTypescript },
+  framer: { name: "Framer Motion", color: "#BB4B96", icon: SiFramer },
+  tailwind: { name: "Tailwind CSS", color: "#06B6D4", icon: SiTailwindcss },
+  supabase: { name: "Supabase", color: "#3ECF8E", icon: SiSupabase },
+  github: {
+    name: "GitHub",
+    color: "#171717",
+    darkColor: "#e6edf3",
+    icon: SiGithub,
+  },
+  nodejs: { name: "Node.js", color: "#5FA04E", icon: SiNodedotjs },
+  mysql: { name: "MySQL", color: "#4479A1", icon: SiMysql },
+  postman: { name: "Postman", color: "#FF6C37", icon: SiPostman },
+  google: { name: "Google", color: "#4285F4", icon: SiGoogle },
+  PostgreSQL: { name: "PostgreSQL", color: "#4285F4", icon: SiPostgresql },
 };
 
 export const techMap = {

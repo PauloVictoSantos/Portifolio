@@ -446,10 +446,6 @@ export default function ProjectSection() {
             blur
             className="mb-16 flex flex-col items-start gap-4 px-6"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground backdrop-blur">
-              <Projector className="size-3.5 text-accent" aria-hidden="true" />
-              Projetos
-            </span>
             <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
               Do código à interface.
             </h2>

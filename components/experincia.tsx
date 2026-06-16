@@ -103,10 +103,6 @@ export function ExperienceSection() {
           blur
           className="mb-16 flex flex-col items-start gap-4"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground backdrop-blur">
-            <Sparkles className="size-3.5 text-accent" aria-hidden="true" />
-            Trajetória
-          </span>
           <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
             Experiência profissional
           </h2>

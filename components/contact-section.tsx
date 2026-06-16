@@ -347,16 +347,6 @@ export default function ContactSection() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-muted text-muted-foreground text-xs font-semibold tracking-[0.2em] uppercase mb-8"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/60 animate-pulse" />
-          Contato
-        </motion.div>
 
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
