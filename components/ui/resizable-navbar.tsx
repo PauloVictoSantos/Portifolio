@@ -270,14 +270,26 @@ export const NavbarButton = ({
     gradient:
       "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
   };
+  
 
+  if (Tag === "button") {
+    return (
+      <button
+        className={cn(baseStyles, variantStyles[variant], className)}
+        {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      >
+        {children}
+      </button>
+    );
+  }
+  
   return (
-    <Tag
-      href={href || undefined}
+    <a
+      href={href}
       className={cn(baseStyles, variantStyles[variant], className)}
-      {...props}
+      {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
     >
       {children}
-    </Tag>
+    </a>
   );
-};
+}
