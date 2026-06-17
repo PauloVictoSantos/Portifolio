@@ -84,13 +84,12 @@ export default function TechMapSection() {
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 text-center sm:px-10 lg:px-16">
         <Reveal delay={80}>
           <h2 className="mt-6 font-display text-5xl font-medium tracking-tight md:text-6xl lg:text-7xl">
-            Tecnologias na <span className="italic text-accent">órbita</span>.
+            Tecnologias Ferramentas
           </h2>
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Ferramentas que uso para transformar interfaces em produtos
-            performáticos, acessíveis e bem-acabados.
+          Tecnologias que uso diariamente em produção.
           </p>
         </Reveal>
 

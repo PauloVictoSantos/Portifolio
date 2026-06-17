@@ -18,6 +18,7 @@ export interface Repo {
 export interface GithubData {
   publicRepos: number
   followers: number
+  totalCommits: number
   topRepos: Repo[]
   languages: { name: string; count: number; color: string }[]
   recentCommits: { repo: string; message: string; date: string; url: string }[]
@@ -26,20 +27,37 @@ export interface GithubData {
 }
 
 const LANG_COLORS: Record<string, string> = {
-  TypeScript: "#3178C6",
-  JavaScript: "#F7DF1E",
-  C:          "#A8B9CC",
-  "C++":      "#f34b7d",
-  Python:     "#3B82F6",
-  HTML:       "#e34c26",
-  CSS:        "#563d7c",
-  Shell:      "#89e051",
+  TypeScript:  "#3178C6",
+  JavaScript:  "#F7DF1E",
+  C:           "#A8B9CC",
+  "C++":       "#f34b7d",
+  Python:      "#3B82F6",
+  HTML:        "#e34c26",
+  CSS:         "#563d7c",
+}
+
+async function fetchAllRepos(username: string): Promise<Repo[]> {
+  const all: Repo[] = []
+  let page = 1
+  while (true) {
+    const res = await fetch(
+      `${BASE}/users/${username}/repos?sort=pushed&per_page=100&page=${page}`
+    )
+    if (!res.ok) break
+    const batch: Repo[] = await res.json()
+    if (!Array.isArray(batch) || batch.length === 0) break
+    all.push(...batch)
+    if (batch.length < 100) break
+    page++
+  }
+  return all
 }
 
 export function useGithub(): GithubData {
   const [data, setData] = useState<GithubData>({
     publicRepos: 0,
     followers: 0,
+    totalCommits: 0,
     topRepos: [],
     languages: [],
     recentCommits: [],
@@ -50,37 +68,39 @@ export function useGithub(): GithubData {
   useEffect(() => {
     async function fetch_all() {
       try {
-        // 1. Perfil
-        const profileRes = await fetch(`${BASE}/users/${USERNAME}`)
-        if (!profileRes.ok) throw new Error("Usuário não encontrado")
-        const profile = await profileRes.json()
+        const [profileRes, repos] = await Promise.all([
+          fetch(`${BASE}/users/${username}`).then(r => {
+            if (!r.ok) throw new Error("Usuário não encontrado")
+            return r.json()
+          }),
+          fetchAllRepos(USERNAME),
+        ])
 
-        // 2. Repos (ordenados por push recente, pega 30)
-        const reposRes = await fetch(
-          `${BASE}/users/${USERNAME}/repos?sort=pushed&per_page=30`
+        // Total commits via search API (último ano)
+        const commitsRes = await fetch(
+          `${BASE}/search/commits?q=author:${USERNAME}&per_page=1`,
+          { headers: { Accept: "application/vnd.github.cloak-preview" } }
         )
-        const repos: Repo[] = await reposRes.json()
+        const commitsData = commitsRes.ok ? await commitsRes.json() : { total_count: 0 }
+        const totalCommits = commitsData.total_count ?? 0
 
-        // Top repos por estrelas
         const topRepos = [...repos]
           .sort((a, b) => b.stargazers_count - a.stargazers_count)
           .slice(0, 5)
 
-        // 3. Linguagens: conta por repo
         const langMap: Record<string, number> = {}
         repos.forEach(r => {
           if (r.language) langMap[r.language] = (langMap[r.language] ?? 0) + 1
         })
         const languages = Object.entries(langMap)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 5)
+          .slice(0, 6)
           .map(([name, count]) => ({
             name,
             count,
             color: LANG_COLORS[name] ?? "#888",
           }))
 
-        // 4. Commits recentes: busca nos 5 repos com push mais recente
         const recentRepos = [...repos]
           .sort((a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime())
           .slice(0, 5)
@@ -88,7 +108,7 @@ export function useGithub(): GithubData {
         const commitResults = await Promise.allSettled(
           recentRepos.map(r =>
             fetch(`${BASE}/repos/${USERNAME}/${r.name}/commits?per_page=2`)
-              .then(res => res.ok ? res.json() : [])
+              .then(res => (res.ok ? res.json() : []))
               .then((commits: any[]) =>
                 commits.map(c => ({
                   repo: r.name,
@@ -106,8 +126,9 @@ export function useGithub(): GithubData {
           .slice(0, 6)
 
         setData({
-          publicRepos: profile.public_repos,
-          followers: profile.followers,
+          publicRepos: profileRes.public_repos,
+          followers: profileRes.followers,
+          totalCommits,
           topRepos,
           languages,
           recentCommits,
@@ -119,6 +140,7 @@ export function useGithub(): GithubData {
       }
     }
 
+    const username = USERNAME
     fetch_all()
   }, [])
 

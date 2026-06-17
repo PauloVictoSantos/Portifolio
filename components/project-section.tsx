@@ -441,18 +441,14 @@ export default function ProjectSection() {
         {showAll && <AllProjectsPage onClose={() => setShowAll(false)} />}
       </AnimatePresence>
 
-      <section id="projetos" className="w-full bg-background pb-24">
+      <section id="projetos" className="w-full bg-background pb-16">
           <ScrollReveal
             blur
             className="mb-16 flex flex-col items-start gap-4 px-6"
           >
-            <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              Do código à interface.
+            <h2 className="text-balance text-7xl font-semibold tracking-tight text-foreground ">
+            Meus Projetos
             </h2>
-            <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-              Cada projeto resolveu um problema real — arquitetura limpa,
-              código que escala e interfaces que impressionam.
-            </p>
           </ScrollReveal>
 
         <div className="flex flex-col gap-16 px-8 py-10 md:px-14">
