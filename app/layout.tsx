@@ -6,6 +6,8 @@ import { NavbarDemo } from '@/components/navBar'
 import { ThemeProvider } from '@/components/provedor-de-tema'
 import Footer from '@/components/footer'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AccentProvider } from "@/contexts/AccentContext";
+
 
 const _roboto = Roboto({
   subsets: ['latin'],
@@ -59,7 +61,9 @@ export default function RootLayout({
             <NavbarDemo />
           </div>
           <TooltipProvider>
-            {children}
+            <AccentProvider>
+              {children}
+            </AccentProvider>
           </TooltipProvider>
           <Analytics />
           <Footer />

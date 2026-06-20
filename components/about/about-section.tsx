@@ -89,7 +89,7 @@ export default function AboutSection() {
         >
           <motion.div variants={item} className="relative inline-block">
             <Reveal delay={80}>
-              <h2 className="mt-3 font-display text-7xl font-extrabold leading-tight tracking-tight ">
+              <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight">
                 Um pouco sobre mim e minha trajetória na programação.
               </h2>
             </Reveal>
@@ -144,7 +144,7 @@ export default function AboutSection() {
               <LinkPreview url="https://fametro.edu.br/" className="text-foreground hover:text-accent">
                 Fametro
               </LinkPreview>
-              e dedico meus esforços para dominar o desenvolvimento Full Stack. Crio interfaces modernas e, ao mesmo tempo exploro a lógica e os banco de dados do back-end.  
+              e dedico meus esforços para dominar o desenvolvimento Full Stack. Crio interfaces modernas e, ao mesmo tempo exploro a lógica e os banco de dados do back-end.
             </p>
           </motion.div>
 

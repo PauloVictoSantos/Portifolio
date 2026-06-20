@@ -19,15 +19,16 @@ export default function Footer() {
             </div>
 
             <p className="text-sm md:text-base text-foreground max-w-sm leading-relaxed">
-              Estufa inteligente com IA, sensores IoT e monitoramento em tempo real.
-              Tecnologia inspirada na Amazônia
+              Desenvolvedor Front-end apaixonado por transformar ideias em interfaces
+              modernas e funcionais. Sempre em busca de aprender e construir soluções
+              que façam a diferença.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 text-sm md:text-base">
             <div className="flex flex-col gap-5">
               <span className="font-semibold text-foreground">
-                Sessões
+                Seções
               </span>
 
               <div className="flex gap-8">
@@ -60,24 +61,18 @@ export default function Footer() {
 
             <div className="flex gap-4">
               <a
-                href="https://instagram.com"
+                href="https://github.com/PauloVictoSantos"
                 target="_blank"
-                className="p-3 rounded-xl bg-black/5 hover:bg-[#E1306C]/20 transition"
-              >
-                <Instagram size={18} className="text-[#E1306C]" />
-              </a>
-
-              <a
-                href="https://github.com"
-                target="_blank"
+                rel="noopener noreferrer"
                 className="p-3 rounded-xl bg-black/5 hover:bg-black/20 transition"
               >
                 <Github size={18} className="text-foreground" />
               </a>
 
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/paulovictorcs"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="p-3 rounded-xl bg-black/5 hover:bg-[#0A66C2]/20 transition"
               >
                 <Linkedin size={18} className="text-[#0A66C2]" />
@@ -96,7 +91,7 @@ export default function Footer() {
         <div className="my-12 h-px bg-black/10 dark:bg-white/10" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-foreground/70">
-          <p>©{new Date().getFullYear()}</p>
+          <p>© {new Date().getFullYear()}</p>
           <p>
             Desenvolvido por <span className="text-accent">Paulo Victor</span>
           </p>

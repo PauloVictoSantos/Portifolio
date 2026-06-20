@@ -17,34 +17,14 @@ type Experience = {
 
 const experiences: Experience[] = [
   {
-    role: "Desenvolvedor Front-end Sênior",
-    company: "Acme Tecnologia",
-    period: "2023 — Presente",
-    location: "São Paulo, Brasil · Remoto",
+    role: "Trainee / Estagiário de Tecnologia",
+    company: "Instituto Federal do Amazonas (IFAM) ",
+    period: "nov de 2022 — nov de 2023",
+    location: "Manaus",
     description:
       "Liderança técnica no desenvolvimento de produtos web com React e Next.js, criando interfaces acessíveis e performáticas para mais de 100 mil usuários.",
     skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-    highlight: "+100k usuários impactados",
-  },
-  {
-    role: "Desenvolvedor Front-end Pleno",
-    company: "Studio Digital",
-    period: "2021 — 2023",
-    location: "Rio de Janeiro, Brasil",
-    description:
-      "Desenvolvimento de aplicações SaaS do zero, colaborando com designers e back-end para entregar features de alto impacto em ciclos ágeis.",
-    skills: ["React", "JavaScript", "Node.js", "Figma"],
-    highlight: "12 produtos entregues",
-  },
-  {
-    role: "Desenvolvedor Web Júnior",
-    company: "Agência Criativa",
-    period: "2019 — 2021",
-    location: "Belo Horizonte, Brasil",
-    description:
-      "Construção de sites institucionais e landing pages responsivas, com foco em SEO, performance e boas práticas de código.",
-    skills: ["HTML", "CSS", "JavaScript", "WordPress"],
-    highlight: "40+ sites publicados",
+    highlight: "",
   },
 ]
 
