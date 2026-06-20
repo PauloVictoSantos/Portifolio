@@ -86,7 +86,7 @@ export function ExperienceSection() {
           <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
             Experiência profissional
           </h2>
-          <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+          <p className="max-w-xl text-pretty text-lg leading-relaxed text-foreground">
             Uma linha do tempo das posições que ocupei e dos projetos em que
             deixei minha marca ao longo da carreira.
           </p>
@@ -94,7 +94,7 @@ export function ExperienceSection() {
 
         <div ref={timelineRef} className="relative">
           {/* Trilho da timeline */}
-          <div className="absolute left-0 top-2 h-full w-px bg-border md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-0 top-2 h-full w-px bg-foreground md:left-1/2 md:-translate-x-1/2" />
           {/* Progresso preenchido */}
           <div
             aria-hidden="true"
@@ -117,7 +117,7 @@ export function ExperienceSection() {
                 >
                   <span
                     className={cn(
-                      "absolute top-2 z-10 flex size-7 items-center justify-center rounded-full border-2 border-background bg-foreground text-background shadow-lg",
+                      "absolute top-2 z-10 flex size-7 items-center justify-center rounded-full border-2 border-background bg-primary text-foreground shadow-lg",
                       "-left-0.75 md:left-auto",
                       isLeft
                         ? "md:right-[-13.5px]"
@@ -140,7 +140,7 @@ export function ExperienceSection() {
                           isLeft && "md:justify-end",
                         )}
                       >
-                        <span className="rounded-full bg-foreground px-2.5 py-0.5 font-mono text-xs font-medium text-background">
+                        <span className="rounded-full bg-primary px-2.5 py-0.5 font-mono text-xs font-medium text-foreground">
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <time className="text-sm font-medium text-muted-foreground">
@@ -169,18 +169,6 @@ export function ExperienceSection() {
                       <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
                         {exp.description}
                       </p>
-
-                      <div
-                        className={cn(
-                          "mt-4 inline-flex items-center gap-1.5 rounded-lg bg-muted px-3 py-1.5 text-sm font-medium text-foreground",
-                        )}
-                      >
-                        <ArrowUpRight
-                          className="size-4 text-foreground"
-                          aria-hidden="true"
-                        />
-                        {exp.highlight}
-                      </div>
 
                       <ul
                         className={cn(

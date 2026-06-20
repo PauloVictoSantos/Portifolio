@@ -50,9 +50,9 @@ export function HeroSection() {
           <Reveal delay={500} className="md:col-span-6 md:col-start-7 flex flex-wrap gap-4 items-center md:justify-end">
             <a
               href="#projetos"
-              className="group inline-flex items-center gap-3 rounded-full bg-foreground px-5 py-3 text-sm text-background transition-all hover:gap-5"
+              className="group inline-flex items-center gap-3 rounded-full bg-primary px-5 py-3 text-sm text-foreground transition-all hover:gap-5"
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-background/15">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground/15">
                 <ArrowDown className="h-3 w-3 transition-transform duration-500 group-hover:translate-y-0.5" />
               </span>
               Explorar trabalhos

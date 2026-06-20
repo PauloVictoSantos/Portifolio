@@ -15,21 +15,21 @@ import { sendMessage, type ContactState } from "@/app/actions/send-message";
 
 const testimonials = [
   {
-    quote: "Esta plataforma transformou completamente como abordamos o alcance aos clientes. Os resultados falam por si mesmos.",
-    name: "Sarah Chen",
-    title: "Head de Marketing, TechCorp",
+    quote: "Pedi um site simples pra minha loja e o resultado ficou muito acima do que eu esperava. Rápido, bonito e funciona perfeitamente no celular.",
+    name: "Camila Duarte",
+    title: "Dona da Camila Modas",
     avatar: "https://assets.aceternity.com/avatars/1.webp",
   },
   {
-    quote: "Reduzimos nosso tempo de resposta pela metade e a satisfação dos clientes nunca foi tão alta. Ferramenta incrível.",
-    name: "Emily Rodriguez",
-    title: "Customer Success Lead, GrowthCo",
+    quote: "Precisava de uma landing page pro lançamento do meu curso e recebi algo limpo, no prazo e sem complicação nenhuma. Comunicação muito clara do início ao fim.",
+    name: "Rafael Tavares",
+    title: "Criador de Conteúdo",
     avatar: "https://assets.aceternity.com/avatars/2.webp",
   },
   {
-    quote: "A melhor decisão que tomamos foi adotar essa solução. O suporte é excepcional e os resultados são mensuráveis.",
-    name: "Marcus Lee",
-    title: "CTO, Startup Vision",
+    quote: "Refez o site da minha pequena empresa e o resultado parece de empresa grande. Entendeu exatamente o que eu queria, mesmo eu não sabendo explicar direito.",
+    name: "Juliana Martins",
+    title: "Consultora de Marketing",
     avatar: "https://assets.aceternity.com/avatars/3.webp",
   },
 ];
@@ -107,7 +107,7 @@ function ShaderPanel() {
   const t = testimonials[active];
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-l-2xl">
+    <div className="relative h-full w-full overflow-hidden rounded-b-2xl lg:rounded-b-none lg:rounded-l-2xl">
       <ShaderCanvas />
 
       <svg className="pointer-events-none absolute inset-0 z-5 h-full w-full opacity-[0.22]">
@@ -117,7 +117,7 @@ function ShaderPanel() {
         <rect width="100%" height="100%" filter="url(#shaderNoise)" />
       </svg>
 
-      <div className="absolute inset-0 z-10 flex items-center justify-center p-8">
+      <div className="absolute inset-0 z-10 flex items-center justify-center p-4 sm:p-6 md:p-8">
         <div className="relative w-full max-w-sm">
           <AnimatePresence mode="wait">
             <motion.div
@@ -126,14 +126,14 @@ function ShaderPanel() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -16, filter: "blur(6px)" }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-xl backdrop-blur-md md:p-8"
+              className="rounded-2xl border border-white/20 bg-white/10 p-5 shadow-xl backdrop-blur-md sm:p-6 md:p-8"
             >
-              <svg className="mb-4 h-8 w-8 text-white/60" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="mb-4 h-7 w-7 text-white/60 sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
-              <p className="text-lg font-medium leading-relaxed text-white md:text-xl">{t.quote}</p>
+              <p className="text-base font-medium leading-relaxed text-white sm:text-lg md:text-xl">{t.quote}</p>
               <div className="mt-6 flex items-center gap-4">
-                <img src={t.avatar} alt={t.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white/30" />
+                <img src={t.avatar} alt={t.name} className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-white/30" />
                 <div>
                   <p className="font-semibold text-white">{t.name}</p>
                   <p className="text-sm text-white/70">{t.title}</p>
@@ -149,7 +149,7 @@ function ShaderPanel() {
                 onClick={() => setActive(i)}
                 className={cn(
                   "h-2 rounded-full transition-all duration-300",
-                  i === active ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
+                  i === active ? "w-6 bg-primary" : "w-2 bg-white/40 hover:bg-white/60"
                 )}
               />
             ))}
@@ -271,7 +271,7 @@ function ContactForm() {
             disabled={isPending}
             whileHover={!isPending ? { scale: 1.01 } : {}}
             whileTap={!isPending ? { scale: 0.98 } : {}}
-            className="relative z-10 flex w-full items-center justify-center gap-2 rounded-full bg-black px-4 py-4 text-sm font-medium text-white transition duration-200 hover:bg-black/90 disabled:opacity-60 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-neutral-100"
+            className="relative z-10 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-4 text-sm font-medium text-foreground transition duration-200 hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <>
@@ -299,15 +299,15 @@ function ContactModalContent() {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96, y: 12 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="grid grid-cols-1 lg:grid-cols-2 min-h-140"
+      className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-140"
     >
       {/* Esquerda: shader */}
-      <div className="order-last h-56 lg:order-first lg:h-auto">
+      <div className="order-last h-48 sm:h-56 lg:order-first lg:h-auto">
         <ShaderPanel />
       </div>
 
       {/* Direita: formulário */}
-      <div className="flex items-start justify-center px-6 py-8 md:px-10 overflow-y-auto">
+      <div className="flex items-start justify-center px-5 py-8 sm:px-6 md:px-10">
         <div className="w-full max-w-lg">
           <motion.div
             initial={{ opacity: 0, x: 16 }}
@@ -332,7 +332,7 @@ function ContactModalContent() {
 /* ─── Seção principal ─────────────────────────────────────────────── */
 export default function ContactSection() {
   return (
-    <section id="contact" className="h-160 w-full rounded-md flex md:items-center md:justify-center bg-background antialiased bg-grid-white/[0.02] relative overflow-hidden">
+    <section id="contact" className="min-h-160 w-full rounded-md flex items-center justify-center bg-background antialiased bg-grid-white/[0.02] relative overflow-hidden py-20 md:py-0">
       <Spotlight />
 
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
@@ -343,7 +343,7 @@ export default function ContactSection() {
             backgroundSize: "60px 60px",
           }}
         />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-100 rounded-full bg-foreground/3 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-175 h-64 sm:h-80 md:h-100 rounded-full bg-foreground/3 blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
@@ -353,7 +353,7 @@ export default function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-5xl md:text-7xl font-black leading-[1.02] tracking-tight text-foreground"
+          className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.05] md:leading-[1.02] tracking-tight text-foreground"
         >
           Vamos
           <br />
@@ -397,7 +397,7 @@ export default function ContactSection() {
               </motion.button>
             </DialogTrigger>
 
-            <DialogContent className="w-[90vw] max-w-[90vw] p-0 overflow-hidden rounded-2xl border-border bg-card shadow-2xl">
+            <DialogContent className="w-[95vw] sm:w-[90vw] max-w-[90vw] max-h-[90vh] p-0 overflow-y-auto rounded-2xl border-border bg-card shadow-2xl">
               <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-border to-transparent z-20" />
               <DialogHeader className="sr-only">
                 <DialogTitle>Fale conosco</DialogTitle>

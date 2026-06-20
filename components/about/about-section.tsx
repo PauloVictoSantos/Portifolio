@@ -14,13 +14,13 @@ function CTAButtons() {
   const buttons = [
     {
       label: "LinkedIn",
-      icon: <Linkedin className="h-4 w-4 text-accent" />,
+      icon: <Linkedin className="h-4 w-4 text-foreground" />,
       href: "https://www.linkedin.com/in/paulovictorcs",
       primary: true,
     },
     {
       label: "GitHub",
-      icon: <Github className="h-4 w-4 text-accent" />,
+      icon: <Github className="h-4 w-4 text-foreground" />,
       href: "https://github.com/PauloVictoSantos",
       primary: false,
     },
@@ -41,8 +41,8 @@ function CTAButtons() {
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.97 }}
           className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-200 ${btn.primary
-            ? "bg-foreground text-background shadow-lg shadow-foreground-600/25 hover:bg-foreground-700"
-            : "border border-border bg-card text-foreground shadow-sm hover:bg-accent"
+            ? "bg-primary text-foreground shadow-lg shadow-foreground-600/25"
+            : "border border-border bg-secondary text-foreground shadow-sm"
             }`}
         >
           {btn.icon}

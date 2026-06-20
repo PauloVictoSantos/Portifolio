@@ -14,7 +14,7 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               <img src="image/Paulo.png" className="w-14 h-14 md:w-16 md:h-16 rounded-full" />
               <span className="font-bold text-2xl md:text-3xl text-foreground">
-                Paulo<span className="text-accent">Victor</span>
+                Paulo <span className="text-primary"> Victor</span>
               </span>
             </div>
 
@@ -43,7 +43,7 @@ export default function Footer() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-foreground/80 hover:text-accent transition"
+                    className="text-foreground/80 hover:text-foreground transition"
                   >
                     {item.label}
                   </Link>
@@ -93,7 +93,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-foreground/70">
           <p>© {new Date().getFullYear()}</p>
           <p>
-            Desenvolvido por <span className="text-accent">Paulo Victor</span>
+            Desenvolvido por <span className="text-primary">Paulo Victor</span>
           </p>
         </div>
 

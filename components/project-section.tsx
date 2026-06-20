@@ -38,7 +38,7 @@ function TechBadge({
   const colors = tech.color.match(/#([A-Fa-f0-9]{6})/g) || []
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground">
+    <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase text-foreground transition-colors hover:border-foreground/20 hover:text-foreground">
       <svg width="0" height="0">
         <linearGradient
           id={`gradient-${techKey}`}
@@ -78,8 +78,8 @@ function Carousel({ images }: { images: string[] }) {
 
   if (!total) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-muted">
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">sem preview</span>
+      <div className="flex h-full w-full items-center justify-center">
+        <span className="text-[10px] uppercase tracking-widest text-foreground">sem preview</span>
       </div>
     )
   }
@@ -176,7 +176,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           <div>
             <h2 className="text-[clamp(1.6rem,2.4vw,2.1rem)] font-black leading-[1.06] tracking-tight text-foreground">
               {project.title}
-              <span className="text-accent">.</span>
+              <span className="text-primary">.</span>
             </h2>
             <time className="mt-1.5 block text-[11px] tracking-widest text-foreground/50 uppercase">
               {formatDate(project.createdAt)}
@@ -202,18 +202,18 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
               href={project.site}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-[11px] font-bold tracking-wider uppercase text-background transition-all duration-200 hover:opacity-80 hover:-translate-y-px"
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[11px] font-bold tracking-wider uppercase text-foreground transition-all duration-200 hover:opacity-80 hover:-translate-y-px"
             >
-              Ver projeto <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
+              Ver projeto <ArrowUpRight className="w-3.5 h-3.5 text-foreground" />
             </a>
           )}
           <a
             href={project.code}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground underline underline-offset-4 transition-opacity hover:text-accent"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground hover:text-primary underline underline-offset-4 transition-opacity"
           >
-            <Github className="w-3.5 h-3.5 text-accent" /> Código
+            <Github className="w-3.5 h-3.5 text-foreground" /> Código
           </a>
         </div>
       </div>
@@ -244,7 +244,7 @@ function ProjectCardCompact({ project, index }: { project: any; index: number })
           <span className="text-primary">.</span>
         </h3>
 
-        <p className="text-[12px] leading-[1.7] text-muted-foreground font-light line-clamp-2">
+        <p className="text-[12px] leading-[1.7] text-foreground font-light line-clamp-2">
           {project.description}
         </p>
 
@@ -265,7 +265,7 @@ function ProjectCardCompact({ project, index }: { project: any; index: number })
               href={project.site}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider uppercase text-background bg-foreground rounded-full px-3 py-1.5 transition-opacity hover:opacity-70"
+              className="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider uppercase text-background bg-primary rounded-full px-3 py-1.5 transition-opacity hover:opacity-70"
             >
               Ver <ExternalLink className="w-2.5 h-2.5" />
             </a>
@@ -274,11 +274,11 @@ function ProjectCardCompact({ project, index }: { project: any; index: number })
             href={project.code}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground underline underline-offset-4 transition-opacity hover:opacity-60"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-foreground underline underline-offset-4 transition-opacity hover:opacity-60"
           >
             <Github className="w-3 h-3" /> GitHub
           </a>
-          <time className="ml-auto text-[10px] tracking-wider text-muted-foreground/40 uppercase">
+          <time className="ml-auto text-[10px] tracking-wider text-foreground/40 uppercase">
             {formatDate(project.createdAt)}
           </time>
         </div>
@@ -312,7 +312,7 @@ function StatsBar() {
           >
             {s.n}
           </motion.p>
-          <p className="mt-2 text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
+          <p className="mt-2 text-[10px] font-semibold tracking-[0.18em] uppercase text-foreground">
             {s.label}
           </p>
         </div>
@@ -327,7 +327,7 @@ function RecentCommits() {
 
   return (
     <div className="mt-12">
-      <p className="mb-5 text-[10px] font-semibold tracking-[0.22em] uppercase text-muted-foreground/50">
+      <p className="mb-5 text-[10px] font-semibold tracking-[0.22em] uppercase text-foreground/50">
         Atividade recente
       </p>
       <div className="flex flex-col divide-y divide-border">
@@ -348,13 +348,13 @@ function RecentCommits() {
               <p className="truncate text-[13px] font-medium text-foreground transition-colors group-hover:text-primary">
                 {c.message || "(sem mensagem)"}
               </p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground/50">
+              <p className="mt-0.5 text-[11px] text-foreground/50">
                 <span className="font-semibold text-chart-1">{c.repo}</span>
                 {" · "}
                 {formatDate(c.date)}
               </p>
             </div>
-            <ExternalLink className="mt-1 h-3 w-3 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-50" />
+            <ExternalLink className="mt-1 h-3 w-3 shrink-0 text-foreground opacity-0 transition-opacity group-hover:opacity-50" />
           </motion.a>
         ))}
       </div>
@@ -381,13 +381,13 @@ function AllProjectsPage({ onClose }: { onClose: () => void }) {
           <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-foreground">
             todos os projetos
           </span>
-          <span className="text-[11px] tracking-widest text-muted-foreground">
+          <span className="text-[11px] tracking-widest text-foreground">
             ({projects.length})
           </span>
         </div>
         <Button
           onClick={onClose}
-          className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground transition-opacity hover:opacity-70"
+          className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-[11px] font-semibold tracking-wider uppercase text-foreground transition-opacity hover:opacity-70"
         >
           <X className="h-3.5 w-3.5" /> Fechar
         </Button>
@@ -404,7 +404,7 @@ function AllProjectsPage({ onClose }: { onClose: () => void }) {
             Todos os<br />
             <span className="text-primary">projetos.</span>
           </h1>
-          <p className="mt-4 max-w-md text-sm font-light leading-[1.8] text-muted-foreground">
+          <p className="mt-4 max-w-md text-sm font-light leading-[1.8] text-foreground">
             Arquitetura limpa, código que escala e interfaces que impressionam — do conceito ao deploy.
           </p>
         </motion.div>
@@ -473,14 +473,14 @@ export default function ProjectSection() {
                   />
 
                   <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-end gap-3 pb-8">
-                    <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-muted-foreground">
+                    <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-foreground">
                       +{projects.length - FULL_VISIBLE} projetos restantes
                     </p>
                     <motion.button
                       onClick={() => setShowAll(true)}
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      className="group inline-flex items-center gap-2 rounded-full bg-foreground px-7 py-3.5 text-[11px] font-bold tracking-wider uppercase text-background transition-opacity hover:opacity-80"
+                      className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-[11px] font-bold tracking-wider uppercase text-foreground transition-opacity hover:opacity-80"
                     >
                       <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
                       Ver todos os projetos
