@@ -60,7 +60,7 @@ export function AnimatedLetterText({ text = "Portfolio", letterToReplace = "o", 
 
             <filter id="diamondGlow" x="-150%" y="-150%" width="400%" height="400%">
               <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
-              <feFlood floodColor="#d4ff4a" floodOpacity="0.3" />
+              <feFlood floodColor="#0A1BD6" floodOpacity="0.3" />
               <feComposite in2="blur" operator="in" />
               <feMerge>
                 <feMergeNode />
@@ -69,10 +69,12 @@ export function AnimatedLetterText({ text = "Portfolio", letterToReplace = "o", 
             </filter>
 
             <linearGradient id="diamondGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#e2ff6a" />
-              <stop offset="40%" stopColor="#d4ff4a" />
-              <stop offset="60%" stopColor="#c4f934" />
-              <stop offset="100%" stopColor="#b8ed28" />
+              <stop offset="0%" stopColor="#DCE1FF" />
+              <stop offset="20%" stopColor="#AEB8FF" />
+              <stop offset="40%" stopColor="#7F90FF" />
+              <stop offset="60%" stopColor="#5167FF" />
+              <stop offset="80%" stopColor="#223FF8" />
+              <stop offset="100%" stopColor="#07139E" />
             </linearGradient>
 
             <linearGradient id="diamondShine" x1="0%" y1="0%" x2="50%" y2="50%">

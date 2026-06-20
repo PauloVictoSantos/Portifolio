@@ -2,8 +2,22 @@
 
 import { useEffect, useState } from "react"
 
-const USERNAME = "PauloVictoSantos"
+// ⚠️ PROVÁVEL CAUSA DO BUG: o valor original era "PauloVictoSantos" (sem o "r"
+// de "Victor"), que não corresponde a nenhuma conta válida no GitHub — por
+// isso a primeira requisição (perfil) sempre falhava com 404, caía no catch,
+// e os stats ficavam travados nos valores iniciais (0, [], 0).
+// Confirme que este é o seu usuário correto: https://github.com/PauloVictorSantos
+const USERNAME = "PauloVictorSantos"
 const BASE = "https://api.github.com"
+
+// Opcional, mas recomendado: crie um token (sem nenhuma permissão/scope
+// marcada, só leitura pública já é suficiente) em
+// https://github.com/settings/tokens e defina NEXT_PUBLIC_GITHUB_TOKEN no
+// .env. Sem token, a API do GitHub limita a 60 requisições/hora por IP — fácil
+// de estourar em dev (cada carregamento da seção faz uns 8 requests) e os
+// erros de rate limit ficavam mascarados como "usuário não encontrado".
+const TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN
+const AUTH_HEADERS: HeadersInit = TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}
 
 export interface Repo {
   id: number
@@ -27,24 +41,46 @@ export interface GithubData {
 }
 
 const LANG_COLORS: Record<string, string> = {
-  TypeScript:  "#3178C6",
-  JavaScript:  "#F7DF1E",
-  C:           "#A8B9CC",
-  "C++":       "#f34b7d",
-  Python:      "#3B82F6",
-  HTML:        "#e34c26",
-  CSS:         "#563d7c",
+  TypeScript: "#3178C6",
+  JavaScript: "#F7DF1E",
+  C: "#A8B9CC",
+  "C++": "#f34b7d",
+  Python: "#3B82F6",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+}
+
+async function githubFetch(path: string, extraHeaders: HeadersInit = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      ...AUTH_HEADERS,
+      ...extraHeaders,
+    },
+  })
+
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Error(`Usuário "${USERNAME}" não encontrado no GitHub. Confira o nome de usuário.`)
+    }
+    if (res.status === 403 || res.status === 429) {
+      throw new Error(
+        "Limite de requisições da API do GitHub atingido. Configure NEXT_PUBLIC_GITHUB_TOKEN ou tente novamente mais tarde."
+      )
+    }
+    throw new Error(`Erro ao consultar a API do GitHub (status ${res.status})`)
+  }
+
+  return res.json()
 }
 
 async function fetchAllRepos(username: string): Promise<Repo[]> {
   const all: Repo[] = []
   let page = 1
   while (true) {
-    const res = await fetch(
-      `${BASE}/users/${username}/repos?sort=pushed&per_page=100&page=${page}`
+    const batch: Repo[] = await githubFetch(
+      `/users/${username}/repos?sort=pushed&per_page=100&page=${page}`
     )
-    if (!res.ok) break
-    const batch: Repo[] = await res.json()
     if (!Array.isArray(batch) || batch.length === 0) break
     all.push(...batch)
     if (batch.length < 100) break
@@ -66,23 +102,28 @@ export function useGithub(): GithubData {
   })
 
   useEffect(() => {
-    async function fetch_all() {
+    let cancelled = false
+
+    async function fetchAll() {
       try {
-        const [profileRes, repos] = await Promise.all([
-          fetch(`${BASE}/users/${username}`).then(r => {
-            if (!r.ok) throw new Error("Usuário não encontrado")
-            return r.json()
-          }),
+        const [profile, repos] = await Promise.all([
+          githubFetch(`/users/${USERNAME}`),
           fetchAllRepos(USERNAME),
         ])
 
-        // Total commits via search API (último ano)
-        const commitsRes = await fetch(
-          `${BASE}/search/commits?q=author:${USERNAME}&per_page=1`,
-          { headers: { Accept: "application/vnd.github.cloak-preview" } }
-        )
-        const commitsData = commitsRes.ok ? await commitsRes.json() : { total_count: 0 }
-        const totalCommits = commitsData.total_count ?? 0
+        // Total de commits via Search API — se essa chamada específica falhar
+        // (ela tem limite de requisições próprio e mais restrito), não deve
+        // derrubar o resto dos dados que já carregaram com sucesso.
+        let totalCommits = 0
+        try {
+          const commitsData = await githubFetch(
+            `/search/commits?q=author:${USERNAME}&per_page=1`,
+            { Accept: "application/vnd.github.cloak-preview" }
+          )
+          totalCommits = commitsData.total_count ?? 0
+        } catch {
+          // segue sem o total exato — a UI cai no fallback (recentCommits.length)
+        }
 
         const topRepos = [...repos]
           .sort((a, b) => b.stargazers_count - a.stargazers_count)
@@ -107,16 +148,15 @@ export function useGithub(): GithubData {
 
         const commitResults = await Promise.allSettled(
           recentRepos.map(r =>
-            fetch(`${BASE}/repos/${USERNAME}/${r.name}/commits?per_page=2`)
-              .then(res => (res.ok ? res.json() : []))
-              .then((commits: any[]) =>
+            githubFetch(`/repos/${USERNAME}/${r.name}/commits?per_page=2`).then(
+              (commits: any[]) =>
                 commits.map(c => ({
                   repo: r.name,
                   message: c.commit?.message?.split("\n")[0] ?? "",
                   date: c.commit?.author?.date ?? "",
                   url: c.html_url ?? r.html_url,
                 }))
-              )
+            )
           )
         )
 
@@ -125,9 +165,10 @@ export function useGithub(): GithubData {
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
           .slice(0, 6)
 
+        if (cancelled) return
         setData({
-          publicRepos: profileRes.public_repos,
-          followers: profileRes.followers,
+          publicRepos: profile.public_repos,
+          followers: profile.followers,
           totalCommits,
           topRepos,
           languages,
@@ -136,12 +177,16 @@ export function useGithub(): GithubData {
           error: null,
         })
       } catch (e: any) {
+        if (cancelled) return
+        console.error("[useGithub]", e)
         setData(prev => ({ ...prev, loading: false, error: e.message }))
       }
     }
 
-    const username = USERNAME
-    fetch_all()
+    fetchAll()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   return data

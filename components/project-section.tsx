@@ -8,7 +8,6 @@ import {
   Projector
 } from "lucide-react"
 import { projects, techMap, type TechKey } from "@/data/project"
-import { useGithub } from "@/hooks/useGithub"
 import { Button } from "./ui/button"
 import { ScrollReveal } from "@/components/scroll-reveal"
 
@@ -287,80 +286,7 @@ function ProjectCardCompact({ project, index }: { project: any; index: number })
   )
 }
 
-function StatsBar() {
-  const { publicRepos, languages, recentCommits, loading } = useGithub()
 
-  const items = [
-    { n: loading ? "…" : `${publicRepos}+`, label: "repositórios" },
-    { n: loading ? "…" : `${languages.length || "—"}`, label: "linguagens" },
-    { n: loading ? "…" : `${recentCommits.length * 8}+`, label: "commits" },
-  ]
-
-  return (
-    <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-border">
-      {items.map((s, i) => (
-        <div
-          key={i}
-          className={`p-7 bg-card ${i < 2 ? "border-r border-border" : ""}`}
-        >
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-[2.2rem] font-black leading-none tracking-tighter text-foreground"
-          >
-            {s.n}
-          </motion.p>
-          <p className="mt-2 text-[10px] font-semibold tracking-[0.18em] uppercase text-foreground">
-            {s.label}
-          </p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function RecentCommits() {
-  const { recentCommits, loading } = useGithub()
-  if (loading || !recentCommits.length) return null
-
-  return (
-    <div className="mt-12">
-      <p className="mb-5 text-[10px] font-semibold tracking-[0.22em] uppercase text-foreground/50">
-        Atividade recente
-      </p>
-      <div className="flex flex-col divide-y divide-border">
-        {recentCommits.map((c, i) => (
-          <motion.a
-            key={i}
-            href={c.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, x: -8 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.35, delay: i * 0.04 }}
-            className="group flex items-start gap-4 py-4 no-underline"
-          >
-            <span className="mt-1.75 h-1.5 w-1.5 shrink-0 rounded-full bg-chart-2" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-medium text-foreground transition-colors group-hover:text-primary">
-                {c.message || "(sem mensagem)"}
-              </p>
-              <p className="mt-0.5 text-[11px] text-foreground/50">
-                <span className="font-semibold text-chart-1">{c.repo}</span>
-                {" · "}
-                {formatDate(c.date)}
-              </p>
-            </div>
-            <ExternalLink className="mt-1 h-3 w-3 shrink-0 text-foreground opacity-0 transition-opacity group-hover:opacity-50" />
-          </motion.a>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 function AllProjectsPage({ onClose }: { onClose: () => void }) {
   return (
@@ -414,17 +340,6 @@ function AllProjectsPage({ onClose }: { onClose: () => void }) {
             <ProjectCardCompact key={i} project={project} index={i} />
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-20"
-        >
-          <StatsBar />
-          <RecentCommits />
-        </motion.div>
       </div>
     </motion.div>
   )
@@ -494,16 +409,6 @@ export default function ProjectSection() {
             return <ProjectCard key={i} project={project} index={i} />
           })}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-4 px-8 md:px-14"
-        >
-          <StatsBar />
-        </motion.div>
       </section>
     </>
   )
